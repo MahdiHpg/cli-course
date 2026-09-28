@@ -1,6 +1,6 @@
-﻿<div dir="rtl">
+<div dir="rtl">
 
-# 🎓 دوره جامع Command Line (CLI) — از «ترس از سیاه‌صفحه» تا قدرت کامل
+# 💻 دوره آموزش جامع خط فرمان (Command Line / CLI) — از صفر تا پیشرفته
 
 <div align="center">
 
