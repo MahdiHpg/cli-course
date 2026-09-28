@@ -1,0 +1,2562 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8"/>
+<title>دوره Command Line</title>
+<style>
+@font-face { font-family:'Vazirmatn'; src:url('fonts/Vazirmatn-Regular.ttf') format('truetype'); font-weight:400; }
+@font-face { font-family:'Vazirmatn'; src:url('fonts/Vazirmatn-Medium.ttf') format('truetype'); font-weight:500; }
+@font-face { font-family:'Vazirmatn'; src:url('fonts/Vazirmatn-Bold.ttf') format('truetype'); font-weight:700; }
+@font-face { font-family:'JetBrains Mono'; src:url('fonts/JetBrainsMono-Regular.ttf') format('truetype'); font-weight:400; }
+@font-face { font-family:'JetBrains Mono'; src:url('fonts/JetBrainsMono-Bold.ttf') format('truetype'); font-weight:700; }
+
+@page { size: A4; margin: 16mm 13mm 18mm 13mm; }
+
+:root {
+  --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
+  --primary:#0e7490; --primary-soft:#ecfeff;
+  --accent:#7c3aed; --accent-soft:#f5f3ff;
+  --green:#059669; --green-soft:#ecfdf5;
+  --amber:#b45309; --amber-soft:#fffbeb;
+  --rose:#be123c; --rose-soft:#fff1f2;
+  --code-bg:#082f49; --code-ink:#e2e8f0;
+}
+* { box-sizing:border-box; }
+html { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+body {
+  direction:rtl; text-align:right;
+  font-family:'Vazirmatn', Tahoma, sans-serif;
+  color:var(--ink); font-size:11.2pt; line-height:2;
+  margin:0; padding:0;
+}
+
+/* cover */
+.cover {
+  page-break-after:always; height:250mm;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  text-align:center; color:#fff; border-radius:14px; padding:20mm;
+  background:linear-gradient(135deg,#082f49 0%,#0e7490 50%,#0d9488 100%);
+}
+.cover .badge { background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
+  padding:4px 18px; border-radius:999px; font-size:10pt; letter-spacing:.3px; }
+.cover h1 { font-size:30pt; line-height:1.6; margin:14px 0 6px; border:none; color:#fff; background:none; }
+.cover h2 { font-size:14pt; font-weight:500; color:#cffafe; border:none; margin:0; }
+.cover .stack { display:flex; gap:10px; margin-top:26px; flex-wrap:wrap; justify-content:center; }
+.cover .stack span { background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.3);
+  border-radius:10px; padding:6px 16px; font-size:10.5pt; }
+.cover .foot { margin-top:40px; font-size:9.5pt; opacity:.85; }
+
+/* toc */
+.toc { page-break-after:always; }
+.toc h1 { border:none; }
+.toc ol { list-style:none; padding:0; counter-reset:toc; }
+.toc li { counter-increment:toc; border-bottom:1px dashed var(--line);
+  padding:9px 2px; display:flex; justify-content:space-between; align-items:baseline; }
+.toc a { text-decoration:none; color:var(--ink); font-weight:500; }
+.toc li::before { content:counter(toc); background:var(--primary-soft); color:var(--primary);
+  font-weight:700; border-radius:8px; width:30px; height:30px; display:inline-flex;
+  align-items:center; justify-content:center; margin-left:14px; flex:none; }
+.toc li .desc { color:var(--muted); font-size:9.5pt; }
+
+/* chapters / headings */
+.chapter { page-break-before:always; }
+h1 {
+  font-size:19pt; color:#fff; background:linear-gradient(90deg,#155e75,#0891b2);
+  padding:14px 22px; border-radius:12px; line-height:1.7;
+  margin:0 0 18px; page-break-after:avoid;
+}
+h2 {
+  color:var(--primary); font-size:14.5pt; margin:26px 0 10px;
+  padding-right:12px; border-right:4px solid var(--primary); line-height:1.8;
+  page-break-after:avoid;
+}
+h3 { color:var(--accent); font-size:12.5pt; margin:20px 0 8px; page-break-after:avoid; }
+p { margin:8px 0; }
+strong { color:#0c4a6e; }
+a { color:var(--primary); text-decoration:none; }
+
+/* lists */
+ul, ol { padding-right:1.6em; padding-left:0; margin:8px 0; }
+li { margin:3px 0; }
+li::marker { color:var(--primary); font-weight:700; }
+input[type="checkbox"] { accent-color:var(--primary); }
+
+/* tables */
+table { border-collapse:collapse; width:100%; margin:12px 0; font-size:10pt;
+  border-radius:10px; overflow:hidden; page-break-inside:avoid; }
+th { background:linear-gradient(90deg,#155e75,#0891b2); color:#fff; font-weight:700; }
+th, td { border:1px solid #d3e2ea; padding:6px 10px; text-align:right; vertical-align:top; }
+tbody tr:nth-child(even) { background:#f8fafc; }
+
+/* code */
+pre, code, kbd { font-family:'JetBrains Mono','Vazirmatn',Consolas,monospace; direction:ltr; }
+code { background:#ecfeff; color:#0e7490; padding:1px 6px; border-radius:5px;
+  font-size:8.8pt; unicode-bidi:embed; }
+pre { background:var(--code-bg); color:var(--code-ink); direction:ltr; text-align:left;
+  padding:13px 16px; border-radius:12px; overflow-x:hidden; font-size:8.6pt;
+  line-height:1.65; margin:10px 0; border:1px solid #0c4a6e; page-break-inside:avoid; }
+pre code { background:none; color:inherit; padding:0; font-size:inherit; }
+.codehilite { background:var(--code-bg) !important; border-radius:12px; margin:10px 0; page-break-inside:avoid; }
+.codehilite pre { margin:0; border:none; background:transparent !important; color:#e2e8f0 !important; }
+.codehilite .k,.codehilite .kd,.codehilite .kn,.codehilite .ow,.codehilite .kc,.codehilite .kr { color:#38bdf8 !important; font-weight:bold; }
+.codehilite .s,.codehilite .s1,.codehilite .s2,.codehilite .sd,.codehilite .sh,.codehilite .si,.codehilite .sb,.codehilite .sc { color:#4ade80 !important; }
+.codehilite .n,.codehilite .na,.codehilite .nx { color:#f1f5f9 !important; }
+.codehilite .nf,.codehilite .fm { color:#facc15 !important; font-weight:bold; }
+.codehilite .mi,.codehilite .mf,.codehilite .m,.codehilite .mh,.codehilite .mo { color:#fb7185 !important; }
+.codehilite .o,.codehilite .p { color:#94a3b8 !important; }
+.codehilite .nb,.codehilite .bp { color:#22d3ee !important; }
+.codehilite .nv,.codehilite .vc,.codehilite .vg,.codehilite .vi,.codehilite .vm { color:#67e8f9 !important; font-weight:bold; }
+.codehilite .err { color:#f87171 !important; background:none !important; border:none !important; }
+.codehilite .c,.codehilite .c1,.codehilite .cm,.codehilite .cp,.codehilite .ch,.codehilite .cs { color:#93c5fd !important; font-style:italic; }
+.codehilite .nt { color:#f472b6 !important; }
+.codehilite .nd { color:#fbbf24 !important; }
+
+/* blockquotes */
+blockquote {
+  margin:12px 0; padding:10px 16px; border-radius:12px;
+  border-right:5px solid var(--primary); background:var(--primary-soft);
+  page-break-inside:avoid;
+}
+blockquote p { margin:4px 0; }
+blockquote p:first-child { font-weight:500; }
+blockquote:has(> p:first-child strong:contains("⚠")) { background:var(--amber-soft); border-right-color:var(--amber); }
+blockquote:has(> p:first-child strong:contains("💡")) { background:var(--green-soft); border-right-color:var(--green); }
+blockquote:has(> p:first-child strong:contains("🚨")) { background:var(--rose-soft); border-right-color:var(--rose); }
+blockquote:has(> p:first-child strong:contains("⚠️")) { background:var(--amber-soft); border-right-color:var(--amber); }
+blockquote:has(> p:first-child strong:contains("🔑")) { background:var(--green-soft); border-right-color:var(--green); }
+blockquote:has(> p:first-child strong:contains("🎯")) { background:var(--primary-soft); border-right-color:var(--primary); }
+blockquote:has(> p:first-child strong:contains("🧘")) { background:var(--green-soft); border-right-color:var(--green); }
+blockquote:has(> p:first-child strong:contains("⭐")) { background:var(--accent-soft); border-right-color:var(--accent); }
+
+/* hr, details */
+hr { border:none; border-top:2px dashed var(--line); margin:22px 0; }
+details { background:#f8fafc; border:1px solid var(--line); border-radius:10px;
+  padding:8px 14px; margin:10px 0; page-break-inside:avoid; }
+summary { cursor:pointer; font-weight:700; color:var(--green); }
+
+/* mermaid */
+.mermaid {
+  background:#fff; border:1px solid var(--line); border-radius:12px;
+  padding:16px 12px; margin:14px 0; text-align:center; page-break-inside:avoid;
+  display:flex; justify-content:center; align-items:center; direction:ltr !important;
+}
+.mermaid svg { width:100% !important; max-width:100% !important; height:auto !important; min-height:120px; }
+.mermaid .nodeLabel, .mermaid .edgeLabel { font-family:'Vazirmatn', Tahoma, sans-serif !important; font-size:13.5px !important; }
+
+del { color:var(--muted); }
+em { color:#1e293b; }
+
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #F00 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #04D } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #00F; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #800 } /* Name.Constant */
+.codehilite .nd { color: #A2F } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #00F } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #BBB } /* Text.Whitespace */
+.codehilite .mb { color: #666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #00F } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666 } /* Literal.Number.Integer.Long */
+</style></head>
+<body>
+<section class="cover">
+  <div class="badge">آموزش صفر تا صد — نسخه ۲۰۲۶</div>
+  <h1>Command Line (CLI)<br/>از صفر مطلق تا قدرت کامل</h1>
+  <h2>از اولین Enter تا اسکریپت‌های شخصی و کنترل سرور</h2>
+  <div class="stack">
+    <span>Git Bash</span><span>Bash Scripting</span><span>grep &amp; pipes</span>
+    <span>PATH &amp; Processes</span><span>SSH &amp; curl</span>
+  </div>
+  <div class="foot">۱۳ فصل · تمرین با جواب · ده ارور کلاسیک · چیت‌شیت و گلاساری</div>
+</section>
+<section class="toc"><h1>فهرست مطالب</h1><ol><li><a href="#ch00">شروع دوره</a><span class="desc">نقشه دوره و زمین تمرین</span></li><li><a href="#ch01">فصل ۱ — CLI چیست و چرا</a><span class="desc">terminal vs shell، چرا CLI، الگوی دستورها</span></li><li><a href="#ch02">فصل ۲ — آماده‌سازی ترمینال</a><span class="desc">VS Code، Git Bash، کلیدهای مقدس (Tab/Ctrl+R)</span></li><li><a href="#ch03">فصل ۳ — ناوبری</a><span class="desc">pwd/ls/cd، مسیر مطلق/نسبی، ~ و ..</span></li><li><a href="#ch04">فصل ۴ — جعبه‌ابزار فایل‌ها</a><span class="desc">mkdir/cp/mv/rm، خواندن فایل‌ها، wildcard</span></li><li><a href="#ch05">فصل ۵ — راهنما گرفتن</a><span class="desc">--help، which، alias، ~/.bashrc</span></li><li><a href="#ch06">فصل ۶ — Pipes و Redirection</a><span class="desc">| و > و >>، stdin/stdout/stderr</span></li><li><a href="#ch07">فصل ۷ — grep و find</a><span class="desc">جستجوی متن و فایل‌ها، سناریوهای واقعی</span></li><li><a href="#ch08">فصل ۸ — دسترسی‌ها و اولین اسکریپت</a><span class="desc">rwx، chmod، sudo، hello.sh</span></li><li><a href="#ch09">فصل ۹ — متغیرهای محیطی و PATH</a><span class="desc">export، راز command not found، .env</span></li><li><a href="#ch10">فصل ۱۰ — پروسه‌ها و پورت‌ها</a><span class="desc">پس‌زمینه، kill، آزاد کردن پورت ۳۰۰۰</span></li><li><a href="#ch11">فصل ۱۱ — جعبه‌ابزار دولوپر</a><span class="desc">node/npm/npx، curl، ssh، tar</span></li><li><a href="#ch12">فصل ۱۲ — اسکریپت‌نویسی Bash</a><span class="desc">آرگومان، شرط، حلقه، newproj.sh</span></li><li><a href="#ch13">فصل ۱۳ — چیت‌شیت و گلاساری</a><span class="desc">مرور سریع + واژه‌نامه + ارورهای کلاسیک</span></li></ol></section><section class="chapter" id="ch00"><h1>🎓 دوره جامع Command Line (CLI) — از «ترس از سیاه‌صفحه» تا قدرت کامل</h1>
+<blockquote>
+<p>🤖 <strong>تولید شده توسط هوش مصنوعی:</strong> این دوره به‌طور کامل توسط مدل <strong>GLM-5.3-Flash</strong> تولید و تدوین شده است.
+<strong>نسخه دوره:</strong> ۲۰۲۶ — با Git Bash روی ویندوز + تفاوت‌های PowerShell/cmd هرجا لازم شد
+<strong>پیش‌نیاز:</strong> هیچ! حتی اگر تا حالا یک دستور هم دستی اجرا نکرده باشید، این دوره از صفر مطلق تا سطح پیشرفته شما را همراهی می‌کند.</p>
+</blockquote>
+<hr />
+<h2>🎯 چرا یادگیری خط فرمان (CLI) حیاتی است؟</h2>
+<p>در دنیای مدرن نرم‌افزار، ابزارهای اصلی توسعه مانند Node.js، npm/pnpm، Git، پایگاه‌های داده، ابزارهای ابری و SSH <strong>همگی مبتنی بر خط فرمان هستند.</strong> تکیه بر رابط‌های گرافیکی محدودیت‌های زیادی ایجاد می‌کند، در حالی که خط فرمان سرعت، دقت و امکان اتوماسیون بی‌نظیری را فراهم می‌سازد. خبر خوب: یادگیری CLI بسیار لذت‌بخش و منطقی است، زیرا نتایج آن فوری و در کار روزمره کاملاً ملموس است.</p>
+<p>پس از اتمام این دوره:
+- هر پروژه یا مخزنی را به سرعت دریافت و با پکیج منیجرها اجرا می‌کنید.
+- خطاهای مسدود شدن پورت‌ها یا کرش پروسه‌ها را در چند ثانیه شناسایی و برطرف می‌سازید.
+- لاگ‌های سنگین را با <code>grep</code> فیلتر کرده و فایل‌ها را با یک دستور مدیریت می‌کنید.
+- اسکریپت‌های اتوماسیون اختصاصی خود را برای حذف کارهای تکراری می‌نویسید.</p>
+<hr />
+<h2>🗺️ نقشه دوره</h2>
+<table>
+<thead>
+<tr>
+<th>فصل</th>
+<th>موضوع</th>
+<th>چی یاد می‌گیری</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#ch01">فصل ۱</a></td>
+<td>CLI چیست و چرا؟</td>
+<td>terminal vs shell، انواع شل، چرا دولوپرها عاشقش‌ان</td>
+</tr>
+<tr>
+<td><a href="#ch02">فصل ۲</a></td>
+<td>ترمینال تو</td>
+<td>Windows Terminal، Git Bash، ترمینال VS Code، آناتومی prompt</td>
+</tr>
+<tr>
+<td><a href="#ch03">فصل ۳</a></td>
+<td>ناوبری</td>
+<td>pwd، ls، cd، مسیر مطلق/نسبی، Tab، تاریخچه</td>
+</tr>
+<tr>
+<td><a href="#ch04">فصل ۴</a></td>
+<td>فایل‌ها و پوشه‌ها</td>
+<td>mkdir، touch، cp، mv، rm، خواندن فایل‌ها، wildcard ها</td>
+</tr>
+<tr>
+<td><a href="#ch05">فصل ۵</a></td>
+<td>راهنما گرفتن</td>
+<td>--help، man، which، alias — «حافظه‌ی بیرونی» تو</td>
+</tr>
+<tr>
+<td><a href="#ch06">فصل ۶</a></td>
+<td>Pipes و Redirection ⭐</td>
+<td>| و &gt; و &gt;&gt; — ابرقدرت واقعی شل</td>
+</tr>
+<tr>
+<td><a href="#ch07">فصل ۷</a></td>
+<td>جستجو</td>
+<td>grep و find — غول‌چراغ پروژه‌های واقعی</td>
+</tr>
+<tr>
+<td><a href="#ch08">فصل ۸</a></td>
+<td>دسترسی‌ها و اولین اسکریپت</td>
+<td>chmod، sudo، shebang، فایل اجرایی خودت</td>
+</tr>
+<tr>
+<td><a href="#ch09">فصل ۹</a></td>
+<td>متغیرهای محیطی و PATH</td>
+<td>export، رازِ «command not found»، .env</td>
+</tr>
+<tr>
+<td><a href="#ch10">فصل ۱۰</a></td>
+<td>پروسه‌ها</td>
+<td>پس‌زمینه، Ctrl+C، kill، <strong>آزاد کردن پورت ۳۰۰۰!</strong></td>
+</tr>
+<tr>
+<td><a href="#ch11">فصل ۱۱</a></td>
+<td>جعبه‌ابزار دولوپر</td>
+<td>node/npm/npx، curl، ssh، tar — ابزارهایی که هر روز می‌بینی</td>
+</tr>
+<tr>
+<td><a href="#ch12">فصل ۱۲</a></td>
+<td>اسکریپت‌نویسی Bash</td>
+<td>متغیر، شرط، حلقه — اتوماسیون کارهای تکراری</td>
+</tr>
+<tr>
+<td><a href="#ch13">فصل ۱۳</a></td>
+<td>چیت‌شیت و گلاساری</td>
+<td>مرور سریع + مسیر ادامه (PowerShell و...)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>🧪 زمین تمرین</h2>
+<p>تمام تمرین‌ها در یک پوشه امن انجام می‌شن — خرابکاریش مجانیه:</p>
+<div class="codehilite"><pre><span></span><code>mkdir<span class="w"> </span>~/cli-playground<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/cli-playground
+</code></pre></div>
+
+<p>(اگه این دو خط رو الان نفهمیدی — دقیقاً همون جاییه که فصل ۳ شروع می‌شه 😄)</p>
+<p><strong>قانون طلایی دوره:</strong> ترمینال با Enter کارت رو <em>اجرا</em> می‌کنه، نه با تایپ. تا Enter نزدی هیچی اتفاق نمی‌افته — پس با خیال راحت تایپ کن. و هر چیزی که نمی‌فهمی، Tab بزن (فصل ۳) و --help بگیر (فصل ۵) — این دو تا، حافظه‌ت رو لازم ندارن.</p>
+<hr />
+<h2>📋 پیش‌نیازهای فنی</h2>
+<table>
+<thead>
+<tr>
+<th>ابزار</th>
+<th>وضعیت</th>
+<th>چک کردن</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Git for Windows (شامل Git Bash)</td>
+<td>الزامی (پایگاه محیط Bash در ویندوز)</td>
+<td><code>git --version</code> در Git Bash</td>
+</tr>
+<tr>
+<td>VS Code</td>
+<td>توصیه‌شده</td>
+<td>ترمینال داخلی برای گردش کار سریع</td>
+</tr>
+<tr>
+<td>Windows Terminal</td>
+<td>اختیاری ولی توصیه‌شده</td>
+<td>تجربه مدرن تب‌بندی ترمینال‌ها (فصل ۲)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>کدوم شل؟</strong> کل دوره با <strong>Bash</strong> (داخل Git Bash) — چون استاندارد جهانیِ سرورها و مک‌هاست و چیزی که یاد بگیری همه‌جا یکسانه. معادل‌های PowerShell/cmd رو کجاها لازم شد جدا ذکر می‌کنم.</p>
+</blockquote>
+<hr />
+<h2>📄 تبدیل به PDF</h2>
+<p>نسخه PDF رنگی راست‌به‌چپ این دوره (فونت وزیرمتن) در همین پوشه آماده است: <strong>«دوره کامل Command Line.pdf»</strong>. برای بازسازی بعد از ویرایش: <code>python build/build_pdf.py</code> + رندر با Chrome headless (دستور دقیق در پرامپت آماده‌ی پوشه والد).</p>
+<hr />
+<h2>🏷️ کلمات کلیدی و برچسب‌های سئو (SEO Keywords &amp; Tags)</h2>
+<blockquote>
+<p><strong>تگ‌های پیشنهادی برای مخزن گیت‌هاب (Topics):</strong>
+<code>cli, command-line, bash, terminal, powershell, git-bash, dev-tools, persian-tutorial, farsi, آموزش-ترمینال, آموزش-خط-فرمان</code></p>
+</blockquote>
+<p><strong>کلمات کلیدی جستجو:</strong><br />
+آموزش خط فرمان و ترمینال به زبان فارسی, کتاب یادگیری دستورات CLI pdf, آموزش ترمینال برای برنامه نویسان, دستورات پرکاربرد لینوکس و ویندوز در ترمینال</p>
+<hr />
+<h2>📥 دانلود مستقیم نسخه چاپی و PDF کتاب</h2>
+<p>برای دسترسی و دانلود مستقیم فایل PDF کامل این دوره آموزشی، به بخش <strong><a href="../../releases">Releases</a></strong> همین ریپازیتوری مراجعه کنید یا فایل PDF قرار داده شده در ریشه مخزن را دریافت نمایید.</p></section><section class="chapter" id="ch01"><h1>فصل ۱ — CLI چیست و چرا دولوپرها عاشقش‌ان؟</h1>
+<blockquote>
+<p>🎯 <strong>هدف این فصل:</strong> مفهوم‌های بنیادی رو مرتب کنی: ترمینال چیست، شل چیست، فرقشون چیه، و چرا صنعت نرم‌افزار هنوز بعد از ۵۰ سال به این «سیاه‌صفحه» وابسته‌ست. هنوز هیچ دستوری نمی‌زنیم — فقط ذهنیت.</p>
+</blockquote>
+<hr />
+<h2>۱.۱ — سه کلمه‌ای که قاطی می‌شن: Console، Terminal، Shell</h2>
+<table>
+<thead>
+<tr>
+<th>واژه</th>
+<th>چیه</th>
+<th>شبیه به</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Shell</strong></td>
+<td>برنامه‌ای که دستورات متنی رو <em>می‌فهمه و اجرا می‌کنه</em> (Bash، PowerShell، Zsh)</td>
+<td>مغز — مترجم تو با سیستم‌عامل</td>
+</tr>
+<tr>
+<td><strong>Terminal</strong></td>
+<td>پنجره‌ای که شل رو <em>نگه می‌داره و نمایش می‌ده</em> (Windows Terminal، iTerm، ترمینال VS Code)</td>
+<td>بدن — پنجره و صفحه‌کلید</td>
+</tr>
+<tr>
+<td><strong>Console</strong></td>
+<td>تاریخچه‌ای: صفحه‌کلید+نمایشگر فیزیکی رایانه‌های قدیمی</td>
+<td>امروزه معمولاً = terminal</td>
+</tr>
+</tbody>
+</table>
+<p>رابطه‌شون:</p>
+<div class="mermaid">
+flowchart LR
+    U["👤 کاربر<br/><b>تایپ دستور</b>"] -->|"۱. ورودی"| T["🖥️ ترمینال<br/><b>پنجره واسط</b>"]
+    T -->|"۲. ارسال متن"| S["⚙️ شِل (Bash)<br/><b>مترجم و پردازنده</b>"]
+    S -->|"۳. اجرای دستور"| OS["💻 سیستم‌عامل<br/><b>برنامه‌ها و سخت‌افزار</b>"]
+</div>
+<blockquote>
+<p>🔄 <strong>مسیر بازگشت خروجی:</strong> سیستم‌عامل نتیجه پردازش را به <strong>شِل</strong> برمی‌گرداند ➔ شِل متن خروجی را به <strong>ترمینال</strong> می‌سپارد ➔ ترمینال آن را روی صفحه به <strong>کاربر</strong> نمایش می‌دهد.</p>
+</blockquote>
+<p>پس وقتی می‌گیم «ترمینال باز کن»، عملاً یعنی «یک پنجره باز کن که داخلش Bash اجرا شده باشه». </p>
+<h3>شل‌های اصلی که خواهی دید</h3>
+<table>
+<thead>
+<tr>
+<th>شل</th>
+<th>کجا</th>
+<th>نکته</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bash</strong></td>
+<td>لینوکس، مک، Git Bash ویندوز</td>
+<td>⭐ استاندارد جهانی — محور این دوره</td>
+</tr>
+<tr>
+<td>Zsh</td>
+<td>مک (پیش‌فرض جدید) + oh-my-zsh</td>
+<td>تقریباً سازگار با Bash</td>
+</tr>
+<tr>
+<td>PowerShell</td>
+<td>ویندوز</td>
+<td>سبک متفاوت: cmdlet ها مثل <code>Get-ChildItem</code></td>
+</tr>
+<tr>
+<td>cmd</td>
+<td>ویندوز قدیمی</td>
+<td><code>dir</code> به جای <code>ls</code> — میراث DOS</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>چرا Bash یاد بگیریم و نه PowerShell؟</strong> چون هر سرور لینوکسی روی زمین، هر آموزش گیت/داکر/Node و هر شرکت لینوکس‌محور با Bash صحبت می‌کنه. PowerShell فقط در محیط ویندوز-محوره. Bash یاد بگیری، همه‌جا مسلطی؛ cmd یاد بگیری، فقط تو یه گوشه‌ی ویندوز کارت راهه.</p>
+</blockquote>
+<hr />
+<h2>۱.۲ — چرا رابط متنی، وقتی گرافیکی داریم؟</h2>
+<p>سوال منصفانه‌ست. جواب در سه کلمه: <strong>قابلیت ترکیب، خودکارسازی، سرعت.</strong></p>
+<p><strong>۱) قابلیت ترکیب (Composition):</strong> در GUI هر ابزار جزیره‌ایه. در CLI همه ابزارها با یک استاندارد مشترک (متن) حرف می‌زنن — پس زنجیر می‌شن:</p>
+<div class="codehilite"><pre><span></span><code>cat<span class="w"> </span>error.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"ERROR"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+<span class="c1"># بخون لاگ رو، فقط خطاهای ERROR رو بردار، مرتب کن، بشمار، پربسامدها اول</span>
+</code></pre></div>
+
+<p>یک خط، کار یک ابزار تحلیلی کرد. در GUI برای این کار چند نرم‌افزار و کلی کپی/پیست لازم بود.</p>
+<p><strong>۲) خودکارسازی:</strong> هر چیزی که دستی تایپ می‌شه، می‌شه توی یک فایل اسکریپت گذاشت و هزار بار اجراش کرد. دکمه‌ی GUI رو نمی‌تونی «ذخیره و تکرار» کنی؛ دستور CLI رو می‌تونی.</p>
+<p><strong>۳) سرعت و دقت:</strong> برای کارهای تکراری (ساخت پروژه، پیمایش بین دوتا پوشه دور، نصب ابزار) تایپ چند حرف از سوییچ‌دار بودن دست‌هات سریع‌تر از حرکت موسه.</p>
+<p><strong>۴) و مهم‌ترین برای تو — کل اکوسیستم دولوپری CLI-محوره:</strong> <code>git</code>، <code>npm</code>، <code>npx create-next-app</code>، <code>psql</code>، <code>ssh</code>، <code>docker</code>، <code>gh</code> — همه فقط کامند لاین دارن (یا GUI هاشون ناقصه). دولوپر بدون CLI مثل آشپز بدون چاقوئه.</p>
+<blockquote>
+<p>🔑 <strong>چشم‌انداز دوره:</strong> قرار نیست «حافظه‌ت رو با صدها دستور پر کنی». قراره <em>روش فکر کردن</em> به CLI رو یاد بگیری: هر ابزار یک کار کوچیک رو عالی انجام می‌ده، و تو اونها رو مثل لگو کنار هم می‌چینی. حافظه رو به Tab و --help می‌سپاریم (فصل ۳ و ۵).</p>
+</blockquote>
+<hr />
+<h2>۱.۳ — یک نگاه به آینده: شکل یک دستور</h2>
+<p>تمام دستوراتی که یاد می‌گیری یک الگوی مشترک دارن — حالا که می‌بینی، بقیه دوره فقط پر کردن جدوله:</p>
+<div class="codehilite"><pre><span></span><code>command  -short-flag  --long-flag  argument  argument
+   │          │             │           │
+   │          │             │           └── روی «چه چیزی» اجرا شه (اسم فایل، مسیر...)
+   │          │             └── گزینه بلند (کامل و خوانا)
+   │          └── گزینه کوتاه (حرف‌خلاصه)
+   └── اسم برنامه
+</code></pre></div>
+
+<p>مثال واقعی که تا حالا دیدی:</p>
+<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"پیام"</span><span class="w">      </span><span class="c1"># برنامه=git، فلگ=-m، آرگومان="پیام"</span>
+npx<span class="w"> </span>create-next-app<span class="w"> </span>my-app<span class="w"> </span>--typescript
+</code></pre></div>
+
+<p>و دو قاعده جهانی که از همین الان بدونی:</p>
+<ol>
+<li><strong>حساس به بزرگی/کوچکی حروفه</strong> — <code>ls</code> کار می‌کنه، <code>LS</code> نه</li>
+<li><strong>فلگ‌ها اختیاری‌ان، ترتیب آرگومان‌ها مهمه</strong> — <code>git -m commit</code> غلطه</li>
+</ol>
+<hr />
+<h2>۱.۴ — افسانه‌های ترسناک (و حقیقتشون)</h2>
+<table>
+<thead>
+<tr>
+<th>افسانه 😱</th>
+<th>حقیقت ✅</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>«اگه اشتباه بزنم سیستم می‌سوزه»</td>
+<td>شل دستور ناقص رو اصلاً اجرا نمی‌کنه؛ فقط ارور می‌ده. حتی حذف فایل‌ها هم محدوده به همون مسیری که درشی</td>
+</tr>
+<tr>
+<td>«باید صدها دستور حفظ باشم»</td>
+<td>۲۰-۳۰ دستور ۹۵٪ کار روزمره‌ست؛ بقیه با --help</td>
+</tr>
+<tr>
+<td>«ترمینال برای هکرهاست»</td>
+<td>ترمینال برای <em>هر کسی که کارش خودکارسازیه</em> — یعنی هر دولوپر</td>
+</tr>
+<tr>
+<td>«ویندوز CLI نداره»</td>
+<td>Git Bash یک Bash واقعی رو روی ویندوزت داری؛ و Windows Terminal همه رو یک‌جا جمع می‌کنه</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ فقط یک استثنای واقعی برای «ترس»: دستورهای تخریبی با مسیر اشتباه (<code>rm -rf</code> روی مسیر غلط) خطرناکن — مثل هر ابزار قدرتمند دیگه. قانون‌های ایمنی رو در فصل ۴ می‌سازیم و بعد دیگه نگرانی معنا نداره.</p>
+</blockquote>
+<hr />
+<h2>۱.۵ — جایگاه CLI در اکوسیستم و نقشه راه برنامه‌نویسی</h2>
+<p>ابزارهای استاندارد دنیای مهندسی نرم‌افزار و کاربرد هر یک در سرفصل‌های این دوره:</p>
+<table>
+<thead>
+<tr>
+<th>ابزار</th>
+<th>کاربرد در پروژه‌های واقعی</th>
+<th>فصل مربوط</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git</code> / <code>npx</code></td>
+<td>مدیریت نسخه و اجرای پکیج‌های توسعه</td>
+<td>۱۱</td>
+</tr>
+<tr>
+<td><code>psql</code></td>
+<td>ارتباط و کوئری‌زدن به دیتابیس در ترمینال</td>
+<td>۶ (ورودی/خروجی)</td>
+</tr>
+<tr>
+<td><code>ssh-keygen</code></td>
+<td>تولید کلیدهای امنیتی برای سرورها و مخازن کد</td>
+<td>۸، ۱۱</td>
+</tr>
+<tr>
+<td><code>npm run dev</code></td>
+<td>اجرای سرورهای توسعه و پروسه‌های وب</td>
+<td>۱۰ (پروسه‌ها)</td>
+</tr>
+<tr>
+<td><code>.env</code></td>
+<td>مدیریت متغیرهای محیطی و کلیدهای پیکربندی</td>
+<td>۹</td>
+</tr>
+</tbody>
+</table>
+<p>خط فرمان در واقع زبان مشترک و زیرساخت ارتباطی میان تمام این ابزارهاست و تسلط بر آن موجب درک عمیق‌تر سازوکار نرم‌افزارها می‌شود.</p>
+<hr />
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li><strong>Shell</strong> = مترجم دستورات (Bash ⭐)، <strong>Terminal</strong> = پنجره‌ی نگه‌دارنده‌اش</li>
+<li>CLI سه مزیت دارد: ترکیب‌پذیری (پایپ‌ها)، خودکارسازی (اسکریپت)، سرعت</li>
+<li>الگوی همه دستورات: <code>command -flag --long-flag argument</code></li>
+<li>حساس به حروف؛ فلگ اختیاری؛ ترتیب آرگومان مهم</li>
+<li>ترس‌ها افسانه‌ان؛ فقط تخریب با مسیر غلط واقعیه → قانون ایمنی در فصل ۴</li>
+<li>Bash یاد بگیری = همه‌جا (لینوکس، مک، ویندوز، سرورها) مسلطی</li>
+</ul>
+<h2>📝 تمرین فصل ۱</h2>
+<ol>
+<li>با جمله خودت فرق shell و terminal رو بگو (یک جمله کافیه).</li>
+<li>سه دستور رایج ابزارهای توسعه (مانند git یا npm) را با الگوی <code>command + flag + argument</code> باز کن. (مثال: <code>npm install -g pnpm</code> → برنامه npm، فلگ -g، آرگومان install و pnpm)</li>
+<li>سوال فکری: چرا <code>git -m commit</code> غلطه ولی <code>git commit -m "x"</code> درسته؟ (راهنمایی: چیه git از مال خودشه؟)</li>
+</ol>
+<details open="open">
+<summary>جواب‌ها</summary>
+<ol>
+<li>شل برنامه‌ای است که دستور را تفسیر و اجرا می‌کند؛ ترمینال پنجره‌ای است که شل داخلش اجرا و نمایش داده می‌شود.</li>
+<li>چون ترتیب آرگومان‌ها مهم است: اول برنامه (git)، بعد زیردستور (commit)، بعد فلگ‌ها و آرگومان‌های خودِ آن زیردستور. زیردستور کامیت است که با -m کار می‌کند، نه خود git.</li>
+</ol>
+</details>
+<p>➡️ <strong>فصل بعد:</strong> ترمینالت رو مثل حرفه‌ای‌ها آماده می‌کنیم و اولین Enter رو می‌زنیم!</p></section><section class="chapter" id="ch02"><h1>فصل ۲ — ترمینالت رو آماده کن: اولین Enter</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> سه راه ورود به Bash رو بشناسی، ترمینال VS Code رو خونه‌ی اصلیت کنی، و آناتومی خط دستور رو بفهمی. آخر این فصل چند دستور زدی و دست‌ت گرم شده.</p>
+</blockquote>
+<hr />
+<h2>۲.۱ — سه راه باز کردن Bash روی ویندوز</h2>
+<table>
+<thead>
+<tr>
+<th>راه</th>
+<th>چطوری</th>
+<th>کی</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Git Bash</strong></td>
+<td>Start Menu → Git Bash</td>
+<td>شروع سریع</td>
+</tr>
+<tr>
+<td><strong>ترمینال VS Code</strong> ⭐</td>
+<td>VS Code باز → <code>Ctrl+`</code> (کلید زیر Esc)</td>
+<td>خونه اصلی دولوپرها — کنار کدت</td>
+</tr>
+<tr>
+<td><strong>Windows Terminal</strong></td>
+<td>از Microsoft Store نصب کن؛ تب‌ها داره</td>
+<td>اگه ترمینال‌های زیاد داری</td>
+</tr>
+</tbody>
+</table>
+<p>نکته‌ی مهم VS Code: به صورت پیش‌فرض ممکنه PowerShell رو باز کنه. بذار Bash رو پیش‌فرضش کنیم:</p>
+<ol>
+<li><code>Ctrl+Shift+P</code> → تایپ کن: <code>Terminal: Select Default Profile</code></li>
+<li><strong>Git Bash</strong> رو انتخاب کن</li>
+<li>ترمینال‌های باز رو ببند (سطل آشغال بالای پنل) و دوباره <code>Ctrl+`</code> — حالا همیشه Bash داری</li>
+</ol>
+<blockquote>
+<p>💡 و برای پروژه‌ها: در VS Code روی پوشه پروژه راست‌کلیک → «Open in Integrated Terminal» — ترمینال مستقیم توی همون مسیر پروژه باز می‌شه (درباره «مسیر» فصل ۳).</p>
+</blockquote>
+<h2>۲.۲ — آناتومی خط دستور (prompt)</h2>
+<p>وقتی Git Bash باز می‌شه، چیزی شبیه این می‌بینی:</p>
+<div class="codehilite"><pre><span></span><code>developer@laptop MINGW64 ~/projects
+$ █
+</code></pre></div>
+
+<p>قسمت‌ها رو بشناس:</p>
+<table>
+<thead>
+<tr>
+<th>قسمت</th>
+<th>معنی</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>developer@laptop</code></td>
+<td>کاربر@نام‌کامپیوتر</td>
+</tr>
+<tr>
+<td><code>MINGW64</code></td>
+<td>اسم محیط Git Bash (مهم نیست حفظش)</td>
+</tr>
+<tr>
+<td><code>~/projects</code></td>
+<td>مسیر فعلی (فصل ۳ کامل)</td>
+</tr>
+<tr>
+<td><code>$</code></td>
+<td><strong>prompt</strong> — یعنی «منتظر دستورتم»</td>
+</tr>
+<tr>
+<td><code>█</code></td>
+<td>کرسر — جایی که تایپ می‌شه</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>🔑 قاعده طلایی خواندن آموزش‌ها (و همین دوره): در همه‌ی مستندات دنیا، کاراکتر <code>$</code> اول خط یعنی «این را در ترمینال تایپ کن» — <strong>خودِ <code>$</code> را تایپ نکن!</strong> فقط بقیه‌ی خط. (وقتی <code>$</code> نیست و <code>#</code> است یعنی دستور ادمینی — فعلاً مال ما نیست.)</p>
+</blockquote>
+<h2>۲.۳ — سه دستور اول عمرت</h2>
+<p>Enter رو آماده کن. این سه تا «سلام دنیای» CLI هستن:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"سلام دنیا"</span>
+سلام<span class="w"> </span>دنیا
+
+$<span class="w"> </span>whoami
+developer
+
+$<span class="w"> </span>date
+Sat<span class="w"> </span>Sep<span class="w"> </span><span class="m">12</span><span class="w"> </span><span class="m">14</span>:32:07<span class="w"> </span><span class="m">2026</span>
+</code></pre></div>
+
+<ul>
+<li><code>echo</code> = هر چی بهش بدی، برمی‌گردونه (مثل <code>console.log</code> شل!)</li>
+<li><code>whoami</code> = من کی‌ام (کاربر فعلی)</li>
+<li><code>date</code> = تاریخ و ساعت سیستم</li>
+</ul>
+<p>یک نکته‌ی مهم که چشم حرفه‌ای‌ها رو می‌سازه: <strong>دستور در خط prompt اجرا می‌شه و خروجی زیرش میاد، بعد دوباره prompt جدید.</strong> ترمینال یک گفتگوی چرخشی است: تو می‌گی → سیستم جواب می‌ده → تو می‌گی...</p>
+<h2>۲.۴ — کلیدهای جادویی (قبل از هر دستور دیگه‌ای اینها رو بلد باش)</h2>
+<table>
+<thead>
+<tr>
+<th>کلید</th>
+<th>کار</th>
+<th>ارزش</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Tab</code></td>
+<td><strong>تکمیل خودکار</strong> اسم فایل/پوشه/دستور</td>
+<td>⭐⭐⭐ هیچوقت اسم کامل ننویس!</td>
+</tr>
+<tr>
+<td><code>↑</code> / <code>↓</code></td>
+<td>پیمایش تاریخچه دستورات</td>
+<td>⭐⭐⭐ دستور قبلی رو دوباره ننویس</td>
+</tr>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>لغو دستور در حال اجرا / خط جدید</td>
+<td>⭐⭐⭐ دکمه فرار همیشگی</td>
+</tr>
+<tr>
+<td><code>Ctrl+L</code></td>
+<td>پاک کردن صفحه</td>
+<td>⭐ تمیزی</td>
+</tr>
+<tr>
+<td><code>Ctrl+A</code> / <code>Ctrl+E</code></td>
+<td>پرش به ابتدا/انتهای خط</td>
+<td>⭐ ویرایش سریع</td>
+</tr>
+<tr>
+<td><code>Ctrl+R</code></td>
+<td>جستجو در تاریخچه دستورات</td>
+<td>⭐⭐ «اون دستور دیروز چی بود؟»</td>
+</tr>
+<tr>
+<td><code>Ctrl+U</code></td>
+<td>پاک کردن از کرسر تا اول خط</td>
+<td>اشتباه تایپی طولانی</td>
+</tr>
+</tbody>
+</table>
+<p>دو تا از اینها رو الان تمرین کن:</p>
+<p><strong>Tab:</strong> تایپ کن <code>ech</code> بعد Tab بزن — خودش می‌شه <code>echo</code>. (کامل‌سازی دستورات هم می‌کنه!)</p>
+<p><strong>Ctrl+R:</strong> بزن و بعد تایپ کن <code>echo</code> — آخرین دستور echo رو از تاریخچه میاره. Enter = اجرا، Tab یا فلش راست = ویرایش.</p>
+<blockquote>
+<p>🔑 <strong>فلسفه دوره:</strong> حرفه‌ای‌ها کم تایپ می‌کنن. Tab و ↑ و Ctrl+R یعنی «حافظه‌ت رو بیخیال» — سیستم یادته.</p>
+</blockquote>
+<h2>۲.۵ — شخصی‌سازی اولیه (اختیاری ولی لذت‌بخش)</h2>
+<p>فونت و سایز ترمینال: در VS Code تنظیمات → <code>terminal.integrated.fontSize</code> (مثلاً 14). در Git Bash مستقل: راست‌کلیک روی نوار عنوان → Options → Text.</p>
+<p>و یک دستور مفید برای همین الان:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>clear<span class="w">        </span><span class="c1"># صفحه رو پاک کن (یا Ctrl+L)</span>
+</code></pre></div>
+
+<hr />
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li>سه راه: Git Bash مستقل، <strong>ترمینال VS Code</strong> (پیش‌فرضش رو Git Bash کن)، Windows Terminal</li>
+<li>آناتومی prompt: کاربر@میزبان + مسیر + <code>$</code> — و قانون: <strong><code>$</code> رو تایپ نکن</strong></li>
+<li><code>echo/whoami/date</code> = اولین دستورات؛ ترمینال گفتگوی چرخشی است</li>
+<li>کلیدهای مقدس: <strong>Tab</strong> (کامل‌سازی)، <strong>↑</strong> (تاریخچه)، <strong>Ctrl+C</strong> (فرار)، <strong>Ctrl+R</strong> (جستجوی تاریخچه)</li>
+<li>حرفه‌ای = کم‌تایپ: حافظه رو به ابزارها واگذار کن</li>
+</ul>
+<h2>📝 تمرین فصل ۲</h2>
+<ol>
+<li>ترمینال VS Code رو با پیش‌فرض Git Bash تنظیم کن و سه دستور <code>echo</code>، <code>whoami</code>، <code>date</code> رو بزن.</li>
+<li>با Tab: بنویس <code>who</code> و Tab بزن — چه پیشنهادهایی می‌ده؟ (<code>whoami</code> باید باشه!)</li>
+<li>تاریخچه: سه دستور مختلف بزن، بعد با <code>↑</code> دوتای اول رو برگردون و دوباره اجراشون کن.</li>
+<li>با Ctrl+R دستور <code>date</code> رو از تاریخچه صدا کن.</li>
+<li>(کشف آزاد) چند بار Tab رو با حروف مختلف (<code>g</code>، <code>n</code>، <code>c</code>) امتحان کن — هر چیزی که دیدی یادداشت کن؛ دستورات استاندارد و مهمی مثل <code>git</code>، <code>npm</code>، <code>cat</code> و غیره را می‌بینی!</li>
+</ol>
+<details open="open">
+<summary>راهنمای تمرین ۵</summary>
+<p>مثلاً <code>g</code> + Tab → شاید <code>git</code> و <code>grep</code> و <code>gcc</code>...؛ <code>n</code> + Tab → <code>npm</code>، <code>node</code>، <code>nano</code>...؛ این لیست، فهرست ابزارهای نصب‌شده‌ی سیستمته — دفعه بعد که اسم یه ابزار رو یادت رفت، همینه که یادت میاره.</p>
+</details>
+<p>➡️ <strong>فصل بعد:</strong> ناوبری — اولین مهارت واقعی: کجام و چطوری برم اونجا؟</p></section><section class="chapter" id="ch03"><h1>فصل ۳ — ناوبری: کجام، چه خبر، چطوری برم اونجا؟</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> پرکاربردترین مهارت CLI: جابجایی بین پوشه‌ها با <code>pwd</code>، <code>ls</code> و <code>cd</code> + مفهوم مسیر مطلق/نسبی که پایه‌ی فهم همه‌ی ابزارهای دولوپریه (از import ها تا git و npm).</p>
+</blockquote>
+<hr />
+<h2>۳.۱ — مفهوم کلیدی: Working Directory</h2>
+<p>شل همیشه توی <em>یک</em> پوشه «نشسته». هر دستوری که می‌زنی نسبت به همون پوشه اجرا می‌شه — بهش می‌گن <strong>Working Directory</strong> (پوشه کاری). مثل اینکه توی اتاقی وایسادی: «فایل profile.js رو باز کن» یعنی مال همین اتاق، مگه اینکه آدرس کامل بدی.</p>
+<p>سه ابزار پیمایش:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">pwd</span><span class="w">           </span><span class="c1"># Print Working Directory — الان کجام؟</span>
+/c/Users/developer
+
+$<span class="w"> </span>ls<span class="w">            </span><span class="c1"># لیست محتوای پوشه فعلی</span>
+Documents<span class="w">  </span>Downloads<span class="w">  </span>projects
+
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>projects<span class="w">   </span><span class="c1"># Change Directory — برو به پوشه projects</span>
+</code></pre></div>
+
+<blockquote>
+<p>⚠️ تفاوت ظاهری ویندوزی: Git Bash مسیرها رو با اسلش رو به جلو (<code>/</code>) نشون می‌ده (<code>/c/Users/...</code>) — همون استایل لینوکس/مک. در cmd/PowerShell همون مسیر <code>C:\Users\...</code> است. دستورات Bash همیشه <code>/</code> می‌خوان.</p>
+</blockquote>
+<h2>۳.۲ — <code>ls</code>: لیست‌گیر حرفه‌ای</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>ls<span class="w">                     </span><span class="c1"># ساده</span>
+$<span class="w"> </span>ls<span class="w"> </span>-l<span class="w">                  </span><span class="c1"># لیست بلند: دسترسی‌ها، سایز، تاریخ</span>
+$<span class="w"> </span>ls<span class="w"> </span>-a<span class="w">                  </span><span class="c1"># همه — حتی مخفی‌ها (چیزی که با . شروع می‌شه)</span>
+$<span class="w"> </span>ls<span class="w"> </span>-lah<span class="w">                </span><span class="c1"># ترکیب محبوب: همه + بلند + سایز خوانا ⭐</span>
+$<span class="w"> </span>ls<span class="w"> </span>~/projects<span class="w">          </span><span class="c1"># لیست یک پوشه دیگه بدون اینکه بری</span>
+</code></pre></div>
+
+<p>نمونه خروجی <code>ls -lah</code>:</p>
+<div class="codehilite"><pre><span></span><code>drwxr-xr-x 1 developer 197121 4.0K Sep 12 10:00 .
+drwxr-xr-x 1 developer 197121 4.0K Sep 12 09:41 ..
+-rw-r--r-- 1 developer 197121  512 Sep 12 10:02 package.json
+drwxr-xr-x 1 developer 197121    0 Sep 12 10:01 src
+</code></pre></div>
+
+<p>چند چیز از این خروجی (فصل ۸ دسترسی‌ها رو کامل می‌کنه):
+- خط اول <code>d</code> = directory، خطوط با <code>-</code> = فایل
+- <code>.</code> = همین پوشه، <code>..</code> = پوشه والد — دوتا اسم مخفی‌ی همیشگی که پایین‌تر عزیز می‌شن
+- ستون‌های بعدی: کاربر، سایز، تاریخ، اسم</p>
+<h2>۳.۳ — <code>cd</code> و مفهوم مسیر: مطلق در برابر نسبی ⭐</h2>
+<p><strong>مسیر مطلق:</strong> از ریشه شروع می‌شه — آدرس کامل پستی:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/c/Users/developer/projects/my-app
+</code></pre></div>
+
+<p><strong>مسیر نسبی:</strong> از <em>جایی که الان هستی</em> — راهنمای محلی:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>src/components<span class="w">    </span><span class="c1"># برو داخل src، بعد داخل components</span>
+</code></pre></div>
+
+<p>چهار نماد طلایی مسیر:</p>
+<table>
+<thead>
+<tr>
+<th>نماد</th>
+<th>معنی</th>
+<th>مثال</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.</code></td>
+<td>همین پوشه</td>
+<td><code>./app.js</code> = فایلی که همین‌جاست</td>
+</tr>
+<tr>
+<td><code>..</code></td>
+<td>یک پوشه بالاتر (والد)</td>
+<td><code>cd ..</code> = برگرد عقب</td>
+</tr>
+<tr>
+<td><code>~</code></td>
+<td>خانه‌ی کاربر (<code>/c/Users/developer</code>)</td>
+<td><code>cd ~</code> یا <code>cd ~/projects</code></td>
+</tr>
+<tr>
+<td><code>/</code></td>
+<td>ریشه + جداکننده مسیر</td>
+<td><code>/c/Users</code></td>
+</tr>
+</tbody>
+</table>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..<span class="w">              </span><span class="c1"># یک پله بالا</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../..<span class="w">           </span><span class="c1"># دو پله بالا</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w">                 </span><span class="c1"># بدون آرگومان: برو خانه (~) — میان‌بر محبوب</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>-<span class="w">               </span><span class="c1"># برگرد به پوشه قبلی که توش بودی (toggle!)</span>
+</code></pre></div>
+
+<blockquote>
+<p>🔑 این نمادها همه‌جا هستن: <code>./</code> در import های جاوااسکریپت (<code>import x from './utils'</code>)، <code>~/</code> در تنظیمات SSH و گیت‌هاب، <code>..</code> در ساختار URL ها — یک مفهوم، هزار جا.</p>
+</blockquote>
+<h2>۳.۴ — Tab: همون کلیدِ فصل ۲، حالا با قدرت کامل</h2>
+<p>بهترین خبر دوره: Tab <em>مسیرها</em> رو هم کامل می‌کنه:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>pro&lt;Tab&gt;<span class="w">        </span><span class="c1"># می‌شود: cd projects</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>projects/my&lt;Tab&gt;<span class="w">  </span><span class="c1"># می‌شود: cd projects/my-app</span>
+</code></pre></div>
+
+<p>اگه چند گزینه بود، <strong>دو بار Tab</strong> = نمایش لیست گزینه‌ها. یعنی: هیچوقت نه اسم پوشه رو حفظی، نه غلط تایپی داری. پیمایش با Tab + فلش‌ها عملاً مثل Explorer می‌شه ولی سریع‌تر.</p>
+<h2>۳.۵ — تاریخچه و جستجو</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">history</span><span class="w">            </span><span class="c1"># لیست همه دستورات این نشست (شماره‌دار)</span>
+$<span class="w"> </span>!!<span class="w">                 </span><span class="c1"># دستور قبلی را دوباره اجرا کن</span>
+</code></pre></div>
+
+<ul>
+<li><code>↑</code> چند بار = پیمایش عقب</li>
+<li><code>Ctrl+R</code> = جستجوی زنده در تاریخچه (بخشی از دستور رو تایپ کن، Enter بزن)</li>
+</ul>
+<hr />
+<h2>۳.۶ — چرخه کامل یک ناوبری واقعی</h2>
+<p>سناریوی واقعی: «می‌خوام پروژه Next.js خودم رو ببینم»:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~<span class="w">                          </span><span class="c1"># خانه</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>projects<span class="w">                   </span><span class="c1"># (با Tab!) وارد پوشه پروژه‌ها</span>
+$<span class="w"> </span>ls<span class="w">                            </span><span class="c1"># کدوم پروژه‌ها دارم؟</span>
+my-shop<span class="w">  </span>my-blog<span class="w">  </span>test-app
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>my-shop<span class="w">                    </span><span class="c1"># ورود به پروژه</span>
+$<span class="w"> </span>ls<span class="w">                            </span><span class="c1"># ساختار پروژه: app, src, package.json...</span>
+$<span class="w"> </span><span class="nb">pwd</span><span class="w">                           </span><span class="c1"># تأیید: /c/Users/developer/projects/my-shop</span>
+$<span class="w"> </span>code<span class="w"> </span>.<span class="w">                        </span><span class="c1"># کل پروژه را در VS Code باز کن! ⭐</span>
+</code></pre></div>
+
+<p><code>code .</code> نقطه‌ی اتصال دو دنیاست: از دل ترمینال، همون پوشه‌ای که توشی رو با GUI باز می‌کنی. (<code>.</code> = همینجا!)</p>
+<hr />
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li>شل همیشه در یک Working Directory نشسته؛ همه دستورها نسبت به اون</li>
+<li><code>pwd</code> (کجام؟) / <code>ls -lah</code> (چه خبر؟) / <code>cd</code> (برم اونجا)</li>
+<li>مسیر مطلق از <code>/</code> شروع می‌شه، نسبی از جای فعلی؛ نمادها: <code>.</code> <code>..</code> <code>~</code> <code>/</code></li>
+<li><code>cd</code> بدون آرگومان = خانه؛ <code>cd -</code> = برگشت</li>
+<li><strong>Tab</strong> مسیرها رو هم کامل می‌کنه — پیمایش بدون حفظ کردن</li>
+<li><code>code .</code> = باز کردن پروژه فعلی در VS Code</li>
+</ul>
+<h2>📝 تمرین فصل ۳ (زمین تمرین: <code>mkdir ~/cli-playground &amp;&amp; cd ~/cli-playground</code>)</h2>
+<ol>
+<li>پیمایش کامل: از خانه شروع کن، با Tab به <code>cli-playground</code> برو، <code>pwd</code> رو بزن، با <code>cd ..</code> برگرد، با <code>cd -</code> دوباره برگرد داخلش.</li>
+<li>ساختار بساز: سه پوشه <code>web</code> و <code>docs</code> و <code>scripts</code> بساز (<code>mkdir web docs scripts</code>)، بعد به <code>web</code> برو، بعد <em>بدون رفتن به ریشه</em> مستقیم به <code>docs</code> برو (راهنمایی: <code>..</code>).</li>
+<li><code>ls -a</code> رو در پوشه‌ات بزن — دو تا اسم مخفی همیشگی رو ببین (<code>.</code> و <code>..</code>).</li>
+<li>چالش: در یک دستور <code>cd</code> از هر جای عمقی، مستقیم به خانه برو (دو راه مختلف پیدا کن!).</li>
+</ol>
+<details open="open">
+<summary>جواب تمرین ۲ و ۴</summary>
+<div class="codehilite"><pre><span></span><code><span class="c1"># تمرین ۲:</span>
+mkdir<span class="w"> </span>web<span class="w"> </span>docs<span class="w"> </span>scripts
+<span class="nb">cd</span><span class="w"> </span>web
+<span class="nb">cd</span><span class="w"> </span>../docs<span class="w">        </span><span class="c1"># از web به docs بدون رد شدن از ریشه</span>
+
+<span class="c1"># تمرین ۴ — دو راه:</span>
+<span class="nb">cd</span><span class="w">                </span><span class="c1"># راه ۱: بدون آرگومان</span>
+<span class="nb">cd</span><span class="w"> </span>~<span class="w">              </span><span class="c1"># راه ۲: نماد خانه</span>
+</code></pre></div>
+
+</details>
+<p>➡️ <strong>فصل بعد:</strong> حالا که راه می‌ری، وقت ساختن و جابجایی فایل‌هاست — جعبه‌ابزار کامل فایل‌ها.</p></section><section class="chapter" id="ch04"><h1>فصل ۴ — ساختن، جابجایی و حذف: جعبه‌ابزار فایل‌ها</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> مدیریت کامل فایل و پوشه با دستور: mkdir، touch، cp، mv، rm + خواندن فایل‌ها + الگوهای wildcard. آخر فصل، Explorer رو عملاً کنار می‌ذاری.</p>
+</blockquote>
+<hr />
+<h2>۴.۱ — ساخت: mkdir و touch</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>mkdir<span class="w"> </span>blog<span class="w">                    </span><span class="c1"># یک پوشه</span>
+$<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>blog/src/components<span class="w">  </span><span class="c1"># زنجیره‌ی تو در تو — پدرها را هم بساز ⭐</span>
+$<span class="w"> </span>touch<span class="w"> </span>notes.txt<span class="w">               </span><span class="c1"># فایل خالی بساز (یا تاریخش را تازه کن)</span>
+</code></pre></div>
+
+<p><code>-p</code> (parents) فلگیه که <strong>همیشه</strong> بهش عادت می‌کنی — بدونش اگه پوشه پدر نباشه ارور می‌گیری، باهاش همه‌ی زنجیره یک‌جا ساخته می‌شه.</p>
+<h2>۴.۲ — کپی: cp</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>cp<span class="w"> </span>notes.txt<span class="w"> </span>backup.txt<span class="w">          </span><span class="c1"># کپی فایل در همین پوشه</span>
+$<span class="w"> </span>cp<span class="w"> </span>notes.txt<span class="w"> </span>~/documents/<span class="w">        </span><span class="c1"># کپی به پوشه دیگر</span>
+$<span class="w"> </span>cp<span class="w"> </span>-r<span class="w"> </span>blog<span class="w"> </span>blog-backup<span class="w">           </span><span class="c1"># ⭐ کپی پوشه با محتوا (-r = recursive)</span>
+</code></pre></div>
+
+<blockquote>
+<p>🔑 قاعده ذهنی: برای هر چیزی که <em>داخلش محتوا داره</em> (پوشه) نسخه recursive (<code>-r</code>) لازمه — این قاعده در <code>cp</code>، <code>rm</code> و... یکسانه.</p>
+</blockquote>
+<h2>۴.۳ — جابجایی و تغییر نام: mv (دو کار با یک دستور!)</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>mv<span class="w"> </span>notes.txt<span class="w"> </span>old-notes.txt<span class="w">       </span><span class="c1"># تغییر نام (جابجایی به اسم جدید!)</span>
+$<span class="w"> </span>mv<span class="w"> </span>old-notes.txt<span class="w"> </span>~/documents/<span class="w">    </span><span class="c1"># انتقال به پوشه دیگر</span>
+$<span class="w"> </span>mv<span class="w"> </span>old-notes.txt<span class="w"> </span>~/documents/archive.txt<span class="w">   </span><span class="c1"># انتقال + تغییر نام همزمان</span>
+$<span class="w"> </span>mv<span class="w"> </span>*.txt<span class="w"> </span>txt-files/<span class="w">              </span><span class="c1"># همه فایل‌های txt را یکجا ببر</span>
+</code></pre></div>
+
+<p>دقت کن: «تغییر نام» فقط <code>mv</code> به اسم جدید در همون پوشه‌ست — چون در فایل‌سیستم، اسم و مسیر یک چیزین.</p>
+<h2>۴.۴ — حذف: rm (با احترام! ⚠️)</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>rm<span class="w"> </span>file.txt<span class="w">               </span><span class="c1"># حذف فایل</span>
+$<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span>folder/<span class="w">             </span><span class="c1"># حذف پوشه با محتوا (recursive)</span>
+$<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>folder/<span class="w">            </span><span class="c1"># فورس + recursive — بدون هیچ سوال و تأییدی!</span>
+</code></pre></div>
+
+<p><code>rm -rf</code> معروف‌ترین دستور ترسناک دنیاست. حقیقتش: کاملاً امنه <em>اگر مسیرش درست باشه</em> — مثل چاقوی سرآشپز. سه قانون ایمنی:</p>
+<ol>
+<li><strong>قبل از rm سنگین، <code>ls</code> بزن</strong> — ببین دقیقاً چی می‌خوای حذف کنی (همون مسیر رو با ls تست کن)</li>
+<li><strong>از <code>-f</code> بلا استفاده استفاده نکن</strong> — معمولاً <code>rm -r</code> کافیه و اگه فایل محافظت‌شده‌ای جلوش باشه، خودت تصمیم می‌گیری</li>
+<li><strong>Trash نداریم!</strong> حذف با rm = حذف واقعی. (برای چیزهای گرون: اول <code>cp -r</code> بکاپ بگیر یا — بهتر — کل پروژه رو توی git داشته باش!)</li>
+</ol>
+<blockquote>
+<p>💡 در PowerShell و cmd معادل‌ها متفاوت‌ان: <code>Remove-Item</code> / <code>del</code> و <code>Remove-Item -Recurse</code> / <code>rmdir /s</code>. ولی چون ما Bash کار می‌کنیم، همون rm برای تو استاندارده.</p>
+</blockquote>
+<h2>۴.۵ — خواندن فایل‌ها: پنج ابزار، پنج حالت</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>cat<span class="w"> </span>file.txt<span class="w">         </span><span class="c1"># کل محتوا بریز تو صفحه (برای فایل‌های کوچیک)</span>
+$<span class="w"> </span>less<span class="w"> </span>file.txt<span class="w">        </span><span class="c1"># صفحه‌به‌صفحه — برای فایل‌های بزرگ ⭐</span>
+<span class="w">                       </span><span class="c1">#   ↑/↓ اسکرول، Space صفحه بعد، / کلمه=جستجو، q خروج</span>
+$<span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span><span class="w"> </span>file.txt<span class="w">  </span><span class="c1"># ۲۰ خط اول</span>
+$<span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span><span class="w"> </span>file.txt<span class="w">  </span><span class="c1"># ۲۰ خط آخر</span>
+$<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>server.log<span class="w">   </span><span class="c1"># ⭐ دنبال کن زنده! (لاگ سرور) — Ctrl+C برای خروج</span>
+</code></pre></div>
+
+<p><code>tail -f</code> (follow) ابزار رازهای دولوپرهاست: لاگ سرور رو زنده نشون می‌ده در حالی که داره نوشته می‌شه. وقتی <code>npm run dev</code> یا هر سروری لاگ می‌ده، همین رفتار رو داری می‌بینی.</p>
+<h2>۴.۶ — Wildcard ها: کار گروهی با الگو</h2>
+<p>الگوهای علامتی (گلوب) که شل <em>قبل از اجرا</em> باز می‌شکنه:</p>
+<table>
+<thead>
+<tr>
+<th>الگو</th>
+<th>یعنی</th>
+<th>مثال</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*</code></td>
+<td>هر رشته‌ای (هر چند کاراکتر)</td>
+<td><code>*.log</code> همه لاگ‌ها</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>دقیقاً یک کاراکتر</td>
+<td><code>file?.txt</code> file1, file2...</td>
+</tr>
+<tr>
+<td><code>[abc]</code></td>
+<td>یکی از این حروف</td>
+<td><code>file[12].txt</code></td>
+</tr>
+</tbody>
+</table>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>ls<span class="w"> </span>*.md<span class="w">            </span><span class="c1"># همه مارکداون‌ها</span>
+$<span class="w"> </span>rm<span class="w"> </span>*.tmp<span class="w">           </span><span class="c1"># همه tmp ها (⚠️ اول با ls *.tmp ببین چی حذف می‌شه!)</span>
+$<span class="w"> </span>cp<span class="w"> </span>~/projects/*.json<span class="w"> </span>.<span class="w">   </span><span class="c1"># همه json های پروژه به اینجا</span>
+</code></pre></div>
+
+<blockquote>
+<p>🔑 ترفند ایمنی طلایی: <strong>قبل از هر دستور گروهی خطرناک، همون wildcard رو به <code>ls</code> بده.</strong> <code>ls *.tmp</code> → چی حذف می‌شه؟ → بعد همون رو با <code>rm</code> بزن. دو ثانیه، جلوی هزار تا پشیمونی.</p>
+</blockquote>
+<h2>۴.۷ — باز کردن با GUI (پل دو دنیا)</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>code<span class="w"> </span>.<span class="w">             </span><span class="c1"># پوشه فعلی در VS Code</span>
+$<span class="w"> </span>code<span class="w"> </span>package.json<span class="w">  </span><span class="c1"># یک فایل در VS Code</span>
+$<span class="w"> </span>start<span class="w"> </span>.<span class="w">            </span><span class="c1"># پوشه فعلی در Explorer ویندوز</span>
+</code></pre></div>
+
+<p>حرفه‌ای واقعی اینا رو باهم ترکیب می‌کنه: پیمایش و عملیات گروهی با CLI، مشاهده/ویرایش ظریف با VS Code.</p>
+<hr />
+<h2>۴.۸ — چرخه کامل: ساخت یک پروژه بدون موس</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/projects/todo/<span class="o">{</span>src,public,docs<span class="o">}</span><span class="w">   </span><span class="c1"># {} = ساخت گروهی چندتایی!</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/projects/todo
+$<span class="w"> </span>touch<span class="w"> </span>src/index.js<span class="w"> </span>README.md
+$<span class="w"> </span>ls<span class="w"> </span>-R<span class="w">            </span><span class="c1"># درخت کامل را نشون بده (R = recursive)</span>
+</code></pre></div>
+
+<p><code>mkdir -p a/{x,y,z}</code> یعنی داخل a سه پوشه x و y و z — brace expansion نامشه و کلی وقت توی سرعتت اثر می‌ذاره.</p>
+<hr />
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li><code>mkdir -p</code> (زنجیره‌ای) و <code>mkdir -p a/{b,c}</code> (گروهی) / <code>touch</code></li>
+<li><code>cp</code> برای پوشه = <code>cp -r</code>؛ <code>mv</code> = جابجایی + تغییر نام با هم</li>
+<li><code>rm</code>: قانون‌ها — اول <code>ls</code> با همون مسیر، <code>-f</code> بلا‌استفاده، Trash نداریم</li>
+<li>خواندن: <code>cat</code> (کوچیک)، <code>less</code> (بزرگ)، <code>head/tail</code> (برش)، <strong><code>tail -f</code></strong> (لاگ زنده)</li>
+<li>Wildcard ها با <code>ls</code> اول تست شن؛ <code>code .</code> پل به GUI</li>
+</ul>
+<h2>📝 تمرین فصل ۴ (در cli-playground)</h2>
+<ol>
+<li>یک طرح پروژه بساز: <code>mkdir -p shop/{src/components,src/pages,public,docs}</code> و با <code>ls -R</code> نتیجه رو ببین.</li>
+<li>سه فایل بساز: <code>touch a.txt b.txt c.log</code> — بعد همه‌ی txt ها رو با یک دستور به پوشه docs انتقال بده (wildcard + mv).</li>
+<li>با <code>echo</code> و <code>cat</code> بازی کن: <code>echo "سلام" &gt; file.txt</code> (بعداً فصل ۶ کاملش می‌کنه — فعلاً فقط ببین فایل ساخته و پر شد) و با <code>cat</code> بخونش.</li>
+<li><code>less</code> رو تجربه کن: <code>less ~/somedir/somefile</code> یا هر فایل متنی بلند — با <code>/</code> توش کلمه جستجو کن و با <code>q</code> بیا بیرون.</li>
+<li>(تست ایمنی!) پوشه <code>shop-backup</code> با cp -r از <code>shop</code> بساز، بعد <code>shop</code> رو با rm -r حذف کن، بعد <code>shop-backup</code> رو به <code>shop</code> تغییر نام بده (mv). این چرخه = بکاپ + حذف + بازیابی با سه دستور.</li>
+</ol>
+<details open="open">
+<summary>جواب تمرین ۵</summary>
+<div class="codehilite"><pre><span></span><code>cp<span class="w"> </span>-r<span class="w"> </span>shop<span class="w"> </span>shop-backup
+rm<span class="w"> </span>-r<span class="w"> </span>shop
+mv<span class="w"> </span>shop-backup<span class="w"> </span>shop
+</code></pre></div>
+
+</details>
+<p>➡️ <strong>فصل بعد:</strong> دیگه قرار نیست چیزی حفظ کنی — راهنما گرفتن از خود سیستم: --help، man، which و alias.</p></section><section class="chapter" id="ch05"><h1>فصل ۵ — راهنما گرفتن از خود سیستم: هرگز چیزی حفظ نکن</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> یاد بگیری هر دستوری — حتی اونی که تا حالا اسمش رو نشنیدی — رو بدون گوگلِ اجباری خودت کشف کنی: --help، man، which، alias و فایل پیکربندی شل. این فصل = «ویژه‌ی فراموش‌کارها» (یعنی همه‌ی ما).</p>
+</blockquote>
+<hr />
+<h2>۵.۱ — سه سطح راهنما</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>mkdir<span class="w"> </span>--help<span class="w">          </span><span class="c1"># ۱) راهنمای سریع: فلگ‌ها + یک خط توضیح هرکدوم</span>
+$<span class="w"> </span>man<span class="w"> </span>mkdir<span class="w">             </span><span class="c1"># ۲) کتابچه کامل (manual) — فقط لینوکس/مک؛ در Git Bash غالباً نیست</span>
+$<span class="w"> </span>which<span class="w"> </span>node<span class="w">            </span><span class="c1"># ۳) این دستور کجای سیستم نصبه؟</span>
+</code></pre></div>
+
+<p><code>--help</code> (یا گاهی <code>-h</code>) تقریباً روی <em>هر</em> ابزار مدرنی کار می‌کنه — git، npm، node، psql. عادت کن: <strong>قبل از سرچ کردن، اول <code>ابزار --help</code> بزن.</strong> نصف سوال‌هات همون‌جا جواب داره.</p>
+<p>نمونه خروجی (بریده‌ای از <code>ls --help</code>):</p>
+<div class="codehilite"><pre><span></span><code>Usage: ls [OPTION]... [FILE]...
+  -a, --all          do not ignore entries starting with .
+  -l                 use a long listing format
+  -h, --human-readable  with -l, print sizes in human readable format
+</code></pre></div>
+
+<p>الگوی خوندنش: <code>Usage</code> می‌گه «چطور صدا زده می‌شه» (چیزی که توی <code>[ ]</code> است اختیاریه)، بعد فلگ‌ها با نسخه کوتاه/بلندشون.</p>
+<h2>۵.۲ — <code>which</code> و <code>type</code>: این دستور از کجا میاد؟</h2>
+<p>وقتی <code>node</code> رو اجرا می‌کنی، شل در یک لیست مسیرها (PATH — فصل ۹) دنبال فایل اجرایی‌اش می‌گرده. ببین کجا پیداش کرده:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>which<span class="w"> </span>node
+/c/Program<span class="w"> </span>Files/nodejs/node
+
+$<span class="w"> </span>which<span class="w"> </span>git
+/c/Program<span class="w"> </span>Files/Git/cmd/git
+
+$<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="nb">cd</span><span class="w">          </span><span class="c1"># برای دستورهای داخلی شل (which نمی‌بیندشان)</span>
+<span class="nb">cd</span><span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>shell<span class="w"> </span><span class="nb">builtin</span>
+</code></pre></div>
+
+<p>کاربرد عملی: «چرا X کار نمی‌کنه؟» — اول <code>which X</code>. جواب خالی یعنی اصلاً نصب نیست یا تو PATH نیست (فصل ۹ دقیقاً همینو حل می‌کنه). جواب مسیر عجیب یعنی نسخه اشتباهی اجرا می‌شه!</p>
+<h2>۵.۳ — alias: اسم مستعار برای دستورهای بلند</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">alias</span><span class="w"> </span><span class="nv">cls</span><span class="o">=</span><span class="s1">'clear'</span><span class="w">                    </span><span class="c1"># از این به بعد cls = clear</span>
+$<span class="w"> </span><span class="nb">alias</span><span class="w"> </span><span class="nv">ll</span><span class="o">=</span><span class="s1">'ls -lah'</span><span class="w">                   </span><span class="c1"># محبوب‌ترین alias دنیا</span>
+$<span class="w"> </span>cls<span class="w">                                  </span><span class="c1"># ✅ کار می‌کند</span>
+</code></pre></div>
+
+<p>⚠️ مشکل: alias ای که توی ترمینال تعریف کردی، با بستن ترمینال می‌پره. راه دائمی: نوشتنش در <strong>فایل پیکربندی شل</strong>:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>nano<span class="w"> </span>~/.bashrc<span class="w">        </span><span class="c1"># فایل پیکربندی هر بارِ اجرای Bash (nano = ادیتور متنی ساده ترمینال)</span>
+</code></pre></div>
+
+<p>این خطوط رو اضافه کن، با Ctrl+O ذخیره و Ctrl+X خارج شو:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">alias</span><span class="w"> </span><span class="nv">ll</span><span class="o">=</span><span class="s1">'ls -lah'</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">cls</span><span class="o">=</span><span class="s1">'clear'</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">gs</span><span class="o">=</span><span class="s1">'git status -sb'</span><span class="w">        </span><span class="c1"># وضعیت خلاصه و تمیز گیت</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">serve</span><span class="o">=</span><span class="s1">'npx serve .'</span><span class="w">        </span><span class="c1"># سرور استاتیک فوری</span>
+</code></pre></div>
+
+<p>برای اعمال بدون ری‌استارت ترمینال:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/.bashrc
+</code></pre></div>
+
+<blockquote>
+<p>💡 <code>~/.bashrc</code> = فایلی که هر بار شل بالا میاد اول اون رو اجرا می‌کنه — جای alias ها، رنگ‌ها و تنظیمات شخصیه. مثل <code>index.js</code> که اول برنامه اجرا می‌شه، برای شل.</p>
+</blockquote>
+<h2>۵.۴ — راهنمای زنده: پیشنهاد خودکار</h2>
+<p>دو کمکی که Git Bash/ترمینال‌های مدرن خودکار می‌دن:</p>
+<ul>
+<li><strong>Tab روی فلگ‌ها:</strong> <code>git comm&lt;Tab&gt;</code> کامل می‌کنه؛ حتی <code>git commit --&lt;Tab&gt;&lt;Tab&gt;</code> لیست فلگ‌ها رو نشون می‌ده (اگه تکمیل گیت نصب باشه)</li>
+<li><strong>پیام «did you mean»:</strong> <code>git commit</code> با غلط املایی → گیت خودش پیشنهاد می‌ده. خجالت نداره، همه دیر یا زود می‌بینیمش 😄</li>
+</ul>
+<h2>۵.۵ — استراتژی «حافظه بیرونی»</h2>
+<p>چرخه‌ای که حرفه‌ای‌ها با هر ابزار جدید انجام می‌دن:</p>
+<div class="mermaid">
+flowchart LR
+    A["اسم ابزار را شنیدم"] --> B["ابزار --help"]
+    B --> C["مثالش را کپی و اجرا"]
+    C --> D{"کار کرد؟"}
+    D -->|بله| E["alias/یادداشت برای دفعه بعد"]
+    D -->|نه| F["متن ارور را بخوان — معمولاً خودش راه‌حل می‌دهد"]
+    F --> C
+</div>
+
+<p>حتی خود گیت این فلسفه رو داره:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>git<span class="w"> </span><span class="nb">help</span><span class="w"> </span>commit<span class="w">      </span><span class="c1"># کتابچه کامل زیردستور commit</span>
+$<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>--help<span class="w">    </span><span class="c1"># همان، در مرورگر/ادیتور</span>
+</code></pre></div>
+
+<hr />
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li><code>ابزار --help</code> = اولین قدم همیشه؛ <code>man</code> کتابچه کامل (لینوکس/مک)</li>
+<li><code>which</code> می‌گه فایل اجرایی از کجا اجرا می‌شه — ابزار اولیه دیباگِ «کار نمی‌کنه»</li>
+<li><code>alias</code> برای خلاصه‌سازی؛ دائمی‌اش فقط در <code>~/.bashrc</code> + <code>source</code> برای اعمال فوری</li>
+<li><code>nano</code> ساده‌ترین ادیتور ترمینال: Ctrl+O ذخیره، Ctrl+X خروج</li>
+<li>حرفه‌ای = حفظ نکردن؛ چرخه‌ی help → اجرا → alias</li>
+</ul>
+<h2>📝 تمرین فصل ۵</h2>
+<ol>
+<li><code>node --help</code> و <code>npm --help</code> رو بزن — فلگ <code>-v</code> (نمایش نسخه) رو توشون پیدا کن.</li>
+<li><code>which</code> رو بزن برای: <code>node</code>، <code>git</code>، <code>npm</code>، <code>psql</code> (یا هر ابزار دیتابیس دیگری که نصب داری). کدوم مسیرها عجیب‌ان؟</li>
+<li>سه alias به <code>~/.bashrc</code> اضافه کن: <code>ll</code>، <code>gs</code> (status خلاصه گیت)، <code>serve</code>. با <code>source</code> فعالشون کن و <code>ll</code> رو تست کن.</li>
+<li>با nano یک فایل <code>about.txt</code> بساز، چند خط بنویس، ذخیره کن و با <code>cat</code> بخونش.</li>
+</ol>
+<details open="open">
+<summary>نکته تمرین ۲</summary>
+<p>اگر <code>which psql</code> خالی برگشت ولی PostgreSQL رو نصب کردی، یعنی مسیر <code>C:\Program Files\PostgreSQL\18\bin</code> به PATH ویندوز اضافه نشده — دقیقاً همون موضوع فصل ۹! یادداشتش کن.</p>
+</details>
+<p>➡️ <strong>فصل بعد:</strong> ابرقدرت واقعی شل — اتصال دستورها به هم با pipes و ذخیره خروجی‌ها با redirection.</p></section><section class="chapter" id="ch06"><h1>فصل ۶ — Pipes و Redirection: ابرقدرت شل ⭐</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> مهم‌ترین مفهوم فلسفی شل: هر برنامه یک فیلتره و خروجی هر برنامه می‌شه ورودی برنامه بعدی. با <code>|</code> و <code>&gt;</code> و <code>&gt;&gt;</code> و <code>&lt;</code> یاد می‌گیری دستورها رو مثل لگو به هم وصل کنی — همون چیزی که در فصل ۱ قولش رو داده بودیم.</p>
+</blockquote>
+<hr />
+<h2>۶.۱ — سه جریان: stdin، stdout، stderr</h2>
+<p>هر برنامه‌ی ترمینالی سه «لوله» داره:</p>
+<div class="mermaid">
+flowchart LR
+    K["صفحه‌کلید تو"] -->|stdin| P["برنامه"]
+    P -->|stdout| M["صفحه نمایش"]
+    P -->|stderr| M
+    P -.->|"کد خروج<br/>0=موفق<br/>≠0=خطا"| E["exit code"]
+</div>
+
+<table>
+<thead>
+<tr>
+<th>جریان</th>
+<th>شماره</th>
+<th>چیه</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stdin</td>
+<td>0</td>
+<td>ورودی — معمولاً صفحه‌کلید</td>
+</tr>
+<tr>
+<td>stdout</td>
+<td>1</td>
+<td>خروجی عادی</td>
+</tr>
+<tr>
+<td>stderr</td>
+<td>2</td>
+<td>پیام‌های خطا</td>
+</tr>
+</tbody>
+</table>
+<p>خبر خوب: چون همه‌چیز <em>متن</em> است، این لوله‌ها رو می‌تونی بچرخونی و به جای صفحه نمایش، به یک برنامه دیگه یا یک فایل وصل کنی. همینه که <code>console.log</code> با نوشتن در فایل فرق داره — اینجا <strong>جریان</strong> قابل اتصاله.</p>
+<h2>۶.۲ — Redirection: خروجی رو بفرست جای دیگه</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"خط اول"</span><span class="w"> </span>&gt;<span class="w"> </span>notes.txt<span class="w">        </span><span class="c1"># بنویس در فایل (بازنویسی!)</span>
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"خط دوم"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>notes.txt<span class="w">       </span><span class="c1"># اضافه کن به انتهای فایل (append)</span>
+$<span class="w"> </span>cat<span class="w"> </span>notes.txt<span class="w">                     </span><span class="c1"># بخون تا مطمئن شی</span>
+خط<span class="w"> </span>اول
+خط<span class="w"> </span>دوم
+</code></pre></div>
+
+<p>⚠️ تفاوت خطرناک <code>&gt;</code> و <code>&gt;&gt;</code>: تک‌شِورون (<code>&gt;</code>) فایل موجود رو <strong>صفر می‌کنه</strong>. (و راه حافظه‌ای: هرچی شِورون بیشتر، محتاط‌تر.)</p>
+<p>ورودی هم می‌شه از فایل گرفت:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span>&lt;<span class="w"> </span>notes.txt<span class="w">        </span><span class="c1"># چند خط دارد؟ (ورودی از فایل)</span>
+<span class="m">2</span>
+</code></pre></div>
+
+<p>و یک ترفند که مهندس‌ها عاشقشن: خالی کردن فایل به سرعت:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>&gt;<span class="w"> </span>big.log<span class="w">        </span><span class="c1"># فایل را خالی کن (به سایز صفر)</span>
+</code></pre></div>
+
+<h2>۶.۳ — Pipe <code>|</code>: خروجی → ورودی برنامه بعدی</h2>
+<p>قوی‌ترین کاراکتر شل:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>cat<span class="w"> </span>orders.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+</code></pre></div>
+
+<div class="mermaid">
+flowchart LR
+    A["cat<br/>محتوا را بریز"] -->|pipe| B["sort<br/>مرتب کن"]
+    B -->|pipe| C["uniq -c<br/>تکراری‌ها را بشمار"]
+    C -->|pipe| D["sort -rn<br/>نزولی عددی"]
+    D --> E["صفحه نمایش"]
+</div>
+
+<p>هر مرحله یک فیلتر ساده؛ زنجیره = یک ابزار تحلیل داده. با داده نمونه امتحانش کن:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s2">"ali\nsara\nali\nreza\nsara\nali\n"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+<span class="w">  </span><span class="m">3</span><span class="w"> </span>ali
+<span class="w">  </span><span class="m">2</span><span class="w"> </span>sara
+<span class="w">  </span><span class="m">1</span><span class="w"> </span>reza
+</code></pre></div>
+
+<p>چهار دستور، خروجی «رتبه‌بندی خریداران» — کوچک‌ترین داشبورد دنیا 😄</p>
+<h2>۶.۴ — ابزارهای فیلتر پایه (همتای زنجیره‌ها)</h2>
+<table>
+<thead>
+<tr>
+<th>ابزار</th>
+<th>کار</th>
+<th>مثال</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>wc</code></td>
+<td>شمارش (l=خط، w=کلمه، c=بایت)</td>
+<td><code>wc -l file</code> چند خط؟</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>مرتب‌سازی (r=نزولی، n=عددی)</td>
+<td><code>sort names.txt</code></td>
+</tr>
+<tr>
+<td><code>uniq</code></td>
+<td>فشرده‌سازی خطوط تکراری <em>مجاور</em> (همیشه با sort)</td>
+<td><code>sort f \| uniq -c</code></td>
+</tr>
+<tr>
+<td><code>head</code> / <code>tail</code></td>
+<td>برش اول/آخر</td>
+<td><code>... \| head -5</code> فقط ۵ تای اول</td>
+</tr>
+<tr>
+<td><code>tee</code></td>
+<td>نمایش + ذخیره همزمان</td>
+<td><code>npm run build \| tee build.log</code></td>
+</tr>
+</tbody>
+</table>
+<h2>۶.۵ — stderr رو هم کنترل کن (سطح ۲)</h2>
+<p>خطاها به فایل نمی‌رن چون به stdout وصل نیستن! برای کنترل هر سه جریان:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build<span class="w"> </span>&gt;<span class="w"> </span>out.log<span class="w">            </span><span class="c1"># فقط stdout ذخیره می‌شود</span>
+$<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build<span class="w"> </span>&gt;<span class="w"> </span>out.log<span class="w"> </span><span class="m">2</span>&gt;<span class="w"> </span>err.log<span class="w"> </span><span class="c1"># خطاها جدا</span>
+$<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build<span class="w"> </span>&gt;<span class="w"> </span>all.log<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w">       </span><span class="c1"># هر دو، با هم در یک فایل ⭐</span>
+$<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w">     </span><span class="c1"># همه را دور بریز (dev/null = سیاه‌چاله)</span>
+</code></pre></div>
+
+<blockquote>
+<p>💡 چرا مهمه؟ چون «لاگ بیلدم چرا فایلم خالیه؟» یکی از رایج‌ترین گیج‌شدگی‌های دولوپرهاست — جواب: خطاها در stderr بودن!</p>
+</blockquote>
+<h2>۶.۶ — سناریوهای واقعی دولوپر (اینها رو حفظ کن، هر هفته لازم می‌شن)</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># ۱) لاگ بیلد بلنده — فقط خطاها:</span>
+$<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+
+<span class="c1"># ۲) چند فایل در این پروژه import شده از ماژول x؟</span>
+$<span class="w"> </span>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">"from 'axios'"</span><span class="w"> </span>src/<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+
+<span class="c1"># ۳) خروجی تست رو هم ببین هم ذخیره کن:</span>
+$<span class="w"> </span>npm<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>test-result.log
+
+<span class="c1"># ۴) بزرگ‌ترین پوشه‌ها/فایل‌های پروژه (دیسک چرا پر شد؟):</span>
+$<span class="w"> </span>du<span class="w"> </span>-sh<span class="w"> </span>*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+
+<span class="c1"># ۵) نسخه node بگیر و در فایل بنویس (مثلاً برای مستندات):</span>
+$<span class="w"> </span>node<span class="w"> </span>-v<span class="w"> </span>&gt;<span class="w"> </span>engines.txt
+</code></pre></div>
+
+<p>(دو تا از اینها از فصل ۷ هستن — grep و du — فعلاً فقط الگوی زنجیره رو نگاه کن.)</p>
+<hr />
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li>هر برنامه سه جریان دارد: stdin(0)، stdout(1)، stderr(2)</li>
+<li><code>&gt;</code> بازنویسی (خطرناک!)، <code>&gt;&gt;</code> افزودن، <code>&lt;</code> ورودی از فایل، <code>&gt; f 2&gt;&amp;1</code> = هر دو جریان</li>
+<li><code>|</code> خروجی را ورودیِ بعدی می‌کند — زنجیره فیلترها = ابزار تحلیل</li>
+<li>فیلترهای پایه: wc، sort، uniq، head/tail، tee</li>
+<li>«لاگ خالی؟» = stderr جدا بود</li>
+</ul>
+<h2>📝 تمرین فصل ۶ (در cli-playground)</h2>
+<ol>
+<li>فایل داده بساز: <code>printf "قلم\nدفتر\nقلم\nموبایل\nقلم\nدفتر\n" &gt; sales.txt</code></li>
+<li>با یک زنجیره pipe: تعداد فروش هر کالا رو به ترتیب نزولی نشون بده. (انتظار: قلم ۳، دفتر ۲، موبایل ۱)</li>
+<li>خروجی تمرین ۲ رو در <code>report.txt</code> ذخیره کن (پایین‌ترش append هم کن: <code>&gt;&gt;</code> با خط جدید).</li>
+<li>فایل <code>sales.txt</code> رو خالی کن با یک دستور، بعد <code>wc -l sales.txt</code> بزن (باید ۰ باشه) و بعدش از تمرین ۱ دوباره پرش کن.</li>
+<li>چالش: چقدر کلمه در فایل README.md پوشه‌ات هست؟ (wc با فلگ درست + ورودی از فایل)</li>
+</ol>
+<details open="open">
+<summary>جواب‌ها</summary>
+<div class="codehilite"><pre><span></span><code><span class="c1"># ۲</span>
+sort<span class="w"> </span>sales.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+<span class="c1"># ۳</span>
+sort<span class="w"> </span>sales.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span>&gt;<span class="w"> </span>report.txt
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"--- گزارش تولید شد ---"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>report.txt
+<span class="c1"># ۵</span>
+wc<span class="w"> </span>-w<span class="w"> </span>&lt;<span class="w"> </span>README.md<span class="w">      </span><span class="c1"># یا: wc -w README.md</span>
+</code></pre></div>
+
+</details>
+<p>➡️ <strong>فصل بعد:</strong> قدرتمندترین فیلترها را جدی یاد می‌گیریم — grep برای متن و find برای فایل‌ها.</p></section><section class="chapter" id="ch07"><h1>فصل ۷ — جستجو: grep و find (غول‌چراغ دولوپرها) 🔍</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> دو ابزاری که بیشترین «وقت‌صرفه‌جویی» رو تو کار روزمره دارن: <code>grep</code> برای جستجو در <em>محتوای</em> فایل‌ها و <code>find</code> برای جستجو در <em>درخت</em> فایل‌ها. آخر فصل، کلیدهای Ctrl+F پروژه‌های چند-هزار-فایلی رو داری.</p>
+</blockquote>
+<hr />
+<h2>۷.۱ — grep: جستجو در متن</h2>
+<p>grep = خطوطی که الگو رو دارن، چاپ کن:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>grep<span class="w"> </span><span class="s2">"todo"</span><span class="w"> </span>app.js<span class="w">                 </span><span class="c1"># خطوط حاوی todo در یک فایل</span>
+$<span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"todo"</span><span class="w"> </span>app.js<span class="w">              </span><span class="c1"># بدون حساسیت به بزرگ/کوچک ⭐</span>
+$<span class="w"> </span>grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">"todo"</span><span class="w"> </span>app.js<span class="w">              </span><span class="c1"># شماره خط هم نشان بده</span>
+$<span class="w"> </span>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">"console.log"</span><span class="w"> </span>src/<span class="w">         </span><span class="c1"># ⭐ recursive: کل پوشه را بگرد</span>
+$<span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"ERROR"</span><span class="w"> </span>server.log<span class="w">         </span><span class="c1"># فقط بشمار: چند خط؟</span>
+$<span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"comment"</span><span class="w"> </span>file.txt<span class="w">         </span><span class="c1"># برعکس: خطوطی که ندارند</span>
+$<span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">2</span><span class="w"> </span>-B<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">"error"</span><span class="w"> </span>log.txt<span class="w">     </span><span class="c1"># ۲ خط قبل و بعد هم نشان بده (context)</span>
+</code></pre></div>
+
+<p>خروجی <code>-rn</code> روی پروژه واقعی (پرکاربردترین شکل):</p>
+<div class="codehilite"><pre><span></span><code>src/api/user.ts:14:  console.log("fetching user");
+src/hooks/useAuth.ts:31:  console.log("auth state", state);
+</code></pre></div>
+
+<p><code>فایل:خط:محتوا</code> — در VS Code همون خط رو Ctrl+Click کنی می‌ری سراغش. (تقریباً همون Ctrl+Shift+F خود VS Code، ولی سریع‌تر و قابل‌زنجیره با pipes.)</p>
+<h2>۷.۲ — grep در زنجیره: جایی که می‌درخشه</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># لاگ بیلد بلند است — فقط خطاها را ببین:</span>
+$<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
+
+<span class="c1"># کدام کامیت‌های دیروز فلان کلمه را دارند:</span>
+$<span class="w"> </span>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"login"</span>
+
+<span class="c1"># چند خط ERROR در لاگ امروز:</span>
+$<span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"ERROR"</span><span class="w"> </span>app.log
+
+<span class="c1"># همه فایل‌هایی که axios مصرف می‌کنند (فقط اسم فایل):</span>
+$<span class="w"> </span>grep<span class="w"> </span>-rl<span class="w"> </span><span class="s2">"axios"</span><span class="w"> </span>src/
+<span class="c1"># (-l = فقط اسم فایل‌ها، بدون خط‌ها)</span>
+</code></pre></div>
+
+<blockquote>
+<p>💡 الگوی ذهنی: <strong>«چیزی که دنبالشه در محتواست → grep؛ چیزی که دنبالشه یک فایله → find.»</strong></p>
+</blockquote>
+<h2>۷.۳ — find: شکار فایل‌ها در درخت</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.test.js"</span><span class="w">              </span><span class="c1"># همه تست‌ها از همینجا به پایین</span>
+$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.md"</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">"*/node_modules/*"</span><span class="w">   </span><span class="c1"># بدون node_modules ⭐</span>
+$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-name<span class="w"> </span><span class="s2">"components"</span><span class="w">     </span><span class="c1"># فقط پوشه (type d)، نه فایل</span>
+$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-size<span class="w"> </span>+10M<span class="w">                     </span><span class="c1"># فایل‌های بزرگ‌تر از ۱۰ مگ</span>
+$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.log"</span><span class="w"> </span>-delete<span class="w">          </span><span class="c1"># ⚠️ حذف همه لاگ‌ها (اول با -print تست کن!)</span>
+</code></pre></div>
+
+<ul>
+<li>الگوی اسم باید توی کوتیشن باشه (<code>"*.log"</code>) — چون شل می‌خواد خودش بازش کنه!</li>
+<li>قانون ایمنی همیشگی: قبل از <code>-delete</code>، همون find رو بدون <code>-delete</code> اجرا کن تا لیست رو ببینی.</li>
+</ul>
+<h2>۷.۴ — ترکیب find با ابزارهای دیگر (xargs بدون معرفی رسمی)</h2>
+<p>find خروجی‌اش اسم فایل است → می‌شه به دستور دیگه داد:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># چند خط در کل فایل‌های md حاوی TODO؟</span>
+$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.md"</span><span class="w"> </span>-exec<span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"TODO"</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+
+<span class="c1"># یا خواناتر با pipe به xargs:</span>
+$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.js"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>grep<span class="w"> </span>-l<span class="w"> </span><span class="s2">"console.log"</span>
+</code></pre></div>
+
+<p>فعلاً فقط ببین الگو: find لیست می‌سازه → grep روش عملیات می‌کنه. (xargs = «خروجی قبلی رو به عنوان آرگومان بده».)</p>
+<h2>۷.۵ — دو ابزار مکمل که بهتره بدونی (شناختی)</h2>
+<table>
+<thead>
+<tr>
+<th>ابزار</th>
+<th>چیست</th>
+<th>چرا بدانیش</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>du -sh *</code></td>
+<td>حجم هر آیتم این پوشه</td>
+<td>«دیسک چرا پره؟» — با <code>sort -rh</code> عالی می‌شه</td>
+</tr>
+<tr>
+<td><code>df -h</code></td>
+<td>فضای کل دیسک‌ها</td>
+<td>قبل از دانلود بزرگ، چک کن</td>
+</tr>
+</tbody>
+</table>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>du<span class="w"> </span>-sh<span class="w"> </span>*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+<span class="c1"># 5 پوشه/فایل پرمصرف دیسک — پیدا شدن در ۲ ثانیه</span>
+</code></pre></div>
+
+<h2>۷.۶ — سناریوی کامل: «این تابع رو کجا تعریف و کجا صدا زدیم؟»</h2>
+<p>واقعی‌ترین موقعیت دولوپری: بازسازی/refactor یک تابع:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">"calcTotal"</span><span class="w"> </span>src/
+src/utils/invoice.ts:8:<span class="w">   </span><span class="nb">export</span><span class="w"> </span><span class="k">function</span><span class="w"> </span>calcTotal<span class="o">(</span>items<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+src/components/Cart.tsx:42:<span class="w">   </span>const<span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>calcTotal<span class="o">(</span>items<span class="o">)</span><span class="p">;</span>
+src/components/Invoice.tsx:19:<span class="w">   </span><span class="k">return</span><span class="w"> </span>calcTotal<span class="o">(</span>items<span class="o">)</span><span class="p">;</span>
+</code></pre></div>
+
+<p>در سه ثانیه فهمیدی: تعریف در invoice.ts خط ۸، دو مصرف‌کننده — و اینکه تغییر امضاش چه فایل‌هایی رو می‌شکنه. این همون «قدرت»یه که IDE ها با ده‌ها منو می‌دن؛ CLI با یک خط.</p>
+<hr />
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li><strong>grep</strong> = جستجو در محتوا: <code>-i</code> بی‌حساسیت، <code>-n</code> شماره خط، <code>-r</code> بازگشتی، <code>-c</code> شمارش، <code>-v</code> معکوس، <code>-l</code> فقط اسم فایل</li>
+<li><strong>find</strong> = جستجو در درخت: <code>-name</code> (با کوتیشن!)، <code>-type d</code>، <code>-size</code>؛ قبل از <code>-delete</code> بدونش اجرا کن</li>
+<li>انتخاب: محتوا → grep؛ فایل → find؛ ترکیب با pipe/xargs = قدرت واقعی</li>
+<li><code>du</code> و <code>df</code> برای دیباگ دیسک</li>
+</ul>
+<h2>📝 تمرین فصل ۷ (در cli-playground)</h2>
+<ol>
+<li>داده بساز: سه فایل js بساز (<code>touch a.js b.js c.js</code>) و با <code>echo "console.log(1)" &gt; a.js</code> (و b و c با متن‌های مختلف — یکی شامل <code>error</code> باش) پرشون کن.</li>
+<li>با grep -rn پیدا کن کدوم فایل <code>error</code> داره — با شماره خط.</li>
+<li>همه فایل‌های <code>.js</code> رو با find پیدا کن، بعد همین‌و برای <code>.md</code>.</li>
+<li>یک فایل بزرگ‌فایک بساز (<code>head -c 20M /dev/zero &gt; big.bin</code> — ۲۰ مگ بایت صفر!) و با find -size پیداش کن، بعد حذفش کن (اول با find بدون delete!).</li>
+<li>چالش واقعی ⭐: در یکی از پروژه‌های خود، همه جاهای استفاده از یک dependency (مثلاً axios یا clsx) رو با grep -rn پیدا کن و ببین چند فایل بهش وابسته‌ان.</li>
+</ol>
+<details open="open">
+<summary>جواب تمرین ۱-۴</summary>
+<div class="codehilite"><pre><span></span><code><span class="c1"># ۲</span>
+grep<span class="w"> </span>-in<span class="w"> </span><span class="s2">"error"</span><span class="w"> </span>*.js<span class="w">        </span><span class="c1"># (کوتیشن لازم نیست — کلمه ساده)</span>
+<span class="c1"># ۳</span>
+find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.js"</span>
+find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.md"</span>
+<span class="c1"># ۴</span>
+head<span class="w"> </span>-c<span class="w"> </span>20M<span class="w"> </span>/dev/zero<span class="w"> </span>&gt;<span class="w"> </span>big.bin
+find<span class="w"> </span>.<span class="w"> </span>-size<span class="w"> </span>+10M<span class="w">            </span><span class="c1"># لیست: ./big.bin</span>
+find<span class="w"> </span>.<span class="w"> </span>-size<span class="w"> </span>+10M<span class="w"> </span>-delete
+</code></pre></div>
+
+</details>
+<p>➡️ <strong>فصل بعد:</strong> دنیای دسترسی‌ها (chmod/sudo) و اولین اسکریپت اجرایی خودت.</p></section><section class="chapter" id="ch08"><h1>فصل ۸ — دسترسی‌ها، sudo و اولین اسکریپت اجرایی خودت</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> بالاخره اون <code>drwxr-xr-x</code> عجیب رو می‌فهمی (که همه‌جای خروجی <code>ls -l</code> بود)، با مفهوم sudo و ارورهای Permission denied دوست می‌شی، و اولین فایل اجرایی خودت رو می‌سازی.</p>
+</blockquote>
+<hr />
+<h2>۸.۱ — رمزگشایی <code>drwxr-xr-x</code></h2>
+<p>هر خط از <code>ls -l</code> با ۱۰ کاراکتر شروع می‌شه:</p>
+<div class="codehilite"><pre><span></span><code>- r w x   r - x   r - -
+│   │       │       │
+│   │       │       └── دیگران: خواندن و اجرا، نوشتن نه
+│   └── گروه: خواندن و اجرا
+└── صاحب فایل: خواندن(r) نوشتن(w) اجرا(x)
+</code></pre></div>
+
+<table>
+<thead>
+<tr>
+<th>حرف</th>
+<th>یعنی</th>
+<th>برای فایل</th>
+<th>برای پوشه</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>r</code></td>
+<td>read</td>
+<td>خواندن محتوا</td>
+<td>دیدن لیست فایل‌ها</td>
+</tr>
+<tr>
+<td><code>w</code></td>
+<td>write</td>
+<td>تغییر محتوا</td>
+<td>ساختن/حذف فایل داخلش</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td>execute</td>
+<td>اجرا به عنوان برنامه</td>
+<td>ورود به پوشه (cd)</td>
+</tr>
+</tbody>
+</table>
+<p>پس <code>drwxr-xr-x</code> یعنی: پوشه‌ای که صاحبش همه‌کار می‌تونه، بقیه فقط ببینن و وارد شن.</p>
+<blockquote>
+<p>💡 سه‌تایی‌ها به سه گروه: <strong>صاحب / گروه / دیگران.</strong> همین مدل ساده، امنیت ۶۰ ساله‌ی یونیکسه — و در ویندوز هم زیر hood چیز مشابهی داره (NTFS permissions) که Git Bash برات نمایش می‌ده.</p>
+</blockquote>
+<h2>۸.۲ — chmod: تغییر دسترسی‌ها</h2>
+<p>ساده‌ترین فرم، فرم حرفی (+ اضافه، - برداشتن):</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>script.sh<span class="w">     </span><span class="c1"># اجرا-پذیرش کن برای همه (پرکاربردترین!) ⭐</span>
+$<span class="w"> </span>chmod<span class="w"> </span>u+x<span class="w"> </span>script.sh<span class="w">    </span><span class="c1"># فقط برای صاحب (u=user)</span>
+$<span class="w"> </span>chmod<span class="w"> </span>-w<span class="w"> </span>secret.txt<span class="w">    </span><span class="c1"># فقط‌خواندنی کن</span>
+</code></pre></div>
+
+<p>(فرم عددی <code>chmod 755</code> و... رو بدون که وجود داره — سرورها زیادش رو می‌بینی؛ <code>7=rwx, 5=r-x</code> ولی برای کار روزمره فرم حرفی کافیه.)</p>
+<h2>۸.۳ — sudo و Permission denied</h2>
+<p>وقتی می‌بینی: <code>Permission denied</code> — یعنی کاربر فعلیت اجازه‌ی اون کار رو نداره. دو علاج:</p>
+<ol>
+<li><strong>درستش کن:</strong> دسترسی/مالکیت رو تغییر بده (<code>chmod</code>)</li>
+<li><strong>با هویت ادمین اجرا کن:</strong> <code>sudo &lt;دستور&gt;</code> — superuser do</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/hosts<span class="w">        </span><span class="c1"># فایل سیستمی را با دسترسی ادمین ویرایش کن</span>
+</code></pre></div>
+
+<blockquote>
+<p>⚠️ دو نکته: (۱) sudo تو Git Bash ویندوز تقریباً بی‌معنیه — ویندوز خودش با پنجره‌ی UAC («Run as administrator») همون کار رو می‌کنه؛ sudo بیشتر برای وقتیه که به سرور لینوکسی SSH می‌زنی (فصل ۱۱). (۲) قانون حرفه‌ای: <strong>sudo رو فقط وقتی می‌زنی که واقعاً لازمه</strong> — اجرای کورکورانه‌ی <code>sudo npm install</code> و اینا اثرات جانبی سیستمی داره.</p>
+</blockquote>
+<h2>۸.۴ — اولین اسکریپت اجرایی 🎉</h2>
+<p>حالا همه‌ی اجزا رو داری: فایل می‌سازی (فصل ۴)، متن می‌نویسی، اجرا-پذیرش می‌کنی (chmod +x). بسازیم:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/bin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/bin
+$<span class="w"> </span>nano<span class="w"> </span>hello.sh
+</code></pre></div>
+
+<p>محتوای فایل:</p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="c1"># hello.sh — اولین اسکریپت من</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"سلام </span><span class="nv">$USER</span><span class="s2"> عزیز!"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"الان ساعت: </span><span class="k">$(</span>date<span class="w"> </span>+%H:%M<span class="k">)</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"تو در مسیر: </span><span class="nv">$PWD</span><span class="s2"> هستی"</span>
+</code></pre></div>
+
+<p>ذخیره (Ctrl+O، Ctrl+X) و اجرا:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>hello.sh
+$<span class="w"> </span>./hello.sh
+سلام<span class="w"> </span>developer<span class="w"> </span>عزیز!
+الان<span class="w"> </span>ساعت:<span class="w"> </span><span class="m">15</span>:42
+تو<span class="w"> </span>در<span class="w"> </span>مسیر:<span class="w"> </span>/c/Users/developer/bin<span class="w"> </span>هستی
+</code></pre></div>
+
+<h3>چرا خط اول؟ (Shebang)</h3>
+<p><code>#!/usr/bin/env bash</code> به سیستم می‌گه «این فایل رو با Bash اجرا کن». بدونش، ویندوز/لینوکس نمی‌دونه با چی تفسیرش کنه. (تو JS دنیا معادلش <code>#!/usr/bin/env node</code> بالای CLI-tool هاست — همونیه که npm bin ها دارن!)</p>
+<h3>چرا <code>./</code> اولش؟</h3>
+<p>چون <code>hello.sh</code> توی PATH سیستم نیست (فصل ۹!) — پس آدرس نسبی می‌دیم: «همین‌جا، این فایل».</p>
+<h2>۸.۵ — بذارش تو PATH: اسکریپت به عنوان «دستور»</h2>
+<p>اگه پوشه‌ای مثل <code>~/bin</code> رو به PATH اضافه کنی (فصل ۹ کاملش می‌کنه)، دیگه لازم نیست <code>./</code> بزنی — از هر جا مثل یک دستور عادی صدا می‌شه:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>hello.sh<span class="w">        </span><span class="c1"># بعد از افزودن ~/bin به PATH</span>
+</code></pre></div>
+
+<p>الگوی کل CLI دنیا همینه: هر «دستور»ی که اجرا می‌کنی، فقط یک فایل اجرایی‌ه که تو PATH پیداش شده. <code>git</code>، <code>npm</code>، <code>node</code> — همه همینن!</p>
+<hr />
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li><code>rwx</code> = خواندن/نوشتن/اجرا در سه گروه (صاحب/گروه/دیگران)؛ <code>x</code> روی پوشه = حق cd</li>
+<li><code>chmod +x</code> = پرکاربردترین؛ Permission denied = یا دسترسی یا sudo (فقط لازم)</li>
+<li>اولین اسکریپت: shebang + chmod +x + اجرا با <code>./</code></li>
+<li>هر «دستور» سیستم = فایل اجرایی در PATH — راز رازها</li>
+</ul>
+<h2>📝 تمرین فصل ۸</h2>
+<ol>
+<li>خروجی <code>ls -l</code> زمین تمرین رو بخون: یک فایل و یک پوشه‌ش رو تفسیر کن (کجاها w دارند؟).</li>
+<li>اسکریپت <code>hello.sh</code> رو بساز و اجرا کن — بعدش دستکاریش کن که اسم پروژه‌ی محبوبت رو هم چاپ کنه.</li>
+<li>دسترسی اجرا رو بردار (<code>chmod -x hello.sh</code>) و دوباره اجرا کن — ارور رو بخون، بعد برگردون.</li>
+<li>یک اسکریپت <code>backup.sh</code> بساز که پوشه‌ای رو با cp -r بکاپ بگیره (چیزی که فصل ۴ دستی زدی — حالا خودکارش کن).</li>
+</ol>
+<details open="open">
+<summary>جواب تمرین ۴</summary>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="c1"># backup.sh — بکاپ از پوشه‌ای که اسمش را بدهی</span>
+cp<span class="w"> </span>-r<span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$1</span><span class="s2">-backup"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"بکاپ گرفته شد: </span><span class="nv">$1</span><span class="s2">-backup"</span>
+</code></pre></div>
+
+<p>(<code>$1</code> = اولین آرگومان — فصل ۱۲ کاملش می‌کند. تست: <code>./backup.sh shop</code>)</p>
+</details>
+<p>➡️ <strong>فصل بعد:</strong> متغیرهای محیطی و PATH — بزرگ‌ترین راز «command not found».</p></section><section class="chapter" id="ch09"><h1>فصل ۹ — متغیرهای محیطی و PATH: راز «command not found»</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> پرتکرارترین سوال هر دولوپر تازه‌کار: «چرا این دستور رو نمی‌شناسه؟!». جواب در دو مفهومه: متغیرهای محیطی (که تو هر پروژه Next.js می‌بینی‌شون) و PATH (لیست جستجوی دستورها). آخر فصل این ارور برای همیشه راز نمی‌مونه.</p>
+</blockquote>
+<hr />
+<h2>۹.۱ — متغیر محیطی چیه؟</h2>
+<p>متغیرهای محیطی = تنظیماتی که از شل به هر برنامه‌ی اجرا شده «به ارث» می‌رسن — اسم کاربر، مسیرها، کلیدها. مثل <code>props</code> که به کامپوننت‌ها پاس می‌شه، ولی برای کل سیستم.</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$USER</span><span class="w">            </span><span class="c1"># خواندن یک متغیر: $ قبل از اسم</span>
+developer
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$HOME</span>
+/c/Users/developer
+
+$<span class="w"> </span>env<span class="w">                   </span><span class="c1"># لیست همه متغیرهای محیطی فعلی (زیاده، غلت بزن!)</span>
+</code></pre></div>
+
+<p>(دقت کن: توی echo اسم با <code>$</code> شروع می‌شه ولی توی لیست env بدون <code>$</code> است — مثل تفاوت «مقدار متغیر» و «اسمش».)</p>
+<h2>۹.۲ — ساخت متغیر: دو نوع، یک تفاوت مهم</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nv">MY_VAR</span><span class="o">=</span><span class="s2">"سلام"</span><span class="w">         </span><span class="c1"># متغیر معمولی شل — فقط در همین نشست</span>
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$MY_VAR</span>
+سلام
+
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">APP_ENV</span><span class="o">=</span><span class="s2">"dev"</span><span class="w">  </span><span class="c1"># متغیر محیطی — به برنامه‌های اجرا شده از این به بعد هم می‌رسد</span>
+</code></pre></div>
+
+<p>قواعد مهم:
+- <strong>بدون فاصله دور <code>=</code>!</strong> — <code>MY_VAR = "x"</code> غلطه (شل فکر می‌کنه داری برنامه‌ی MY_VAR رو اجرا کنی!)
+- کوتیشن‌ها رو بذار (مخصوصاً با فاصله): <code>APP_NAME="My Shop"</code>
+- هر دو نوع با بستن ترمینال می‌پرن — دائمی‌شون پایین‌تر</p>
+<h2>۹.۳ — دائمی کردن: ~/.bashrc</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>nano<span class="w"> </span>~/.bashrc
+</code></pre></div>
+
+<p>اضافه کن:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">PROJECTS_DIR</span><span class="o">=</span><span class="s2">"/c/Users/developer/projects"</span><span class="w">    </span><span class="c1"># میان‌بر پوشه پروژه‌ها</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">EDITOR</span><span class="o">=</span><span class="s2">"code --wait"</span>
+</code></pre></div>
+
+<p>بعد <code>source ~/.bashrc</code> و حالا:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$PROJECTS_DIR</span><span class="w">       </span><span class="c1"># مستقیم به پوشه پروژه‌ها — میان‌بر سریع!</span>
+</code></pre></div>
+
+<h2>۹.۴ — PATH: لیست جستجوی دستورها ⭐</h2>
+<p>وقتی تایپ می‌کنی <code>node</code>، شل نمی‌دونه <code>node</code> چیه — فقط می‌ره توی مسیرهای ذخیره‌شده در متغیر <strong>PATH</strong> یکی‌یکی دنبال فایل اجرایی <code>node</code> می‌گرده. اولین جایی که پیداش کنه اجرا می‌کنه:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$PATH</span>
+/c/Program<span class="w"> </span>Files/nodejs:/c/Program<span class="w"> </span>Files/Git/cmd:/c/Users/developer/bin:...
+</code></pre></div>
+
+<p>مقادیر با <code>:</code> (لینوکس/مک) یا <code>;</code> (ویندوز) جدا می‌شن. حالا این جمله رو قاب کن:</p>
+<blockquote>
+<p><strong>«command not found» یعنی: در هیچ‌کدوم از پوشه‌های PATH فایل اجرایی با این اسم نبود.</strong></p>
+</blockquote>
+<p>دو علاج همیشه:
+1. <strong>نصبش ناقصه</strong> → نصبش کن
+2. <strong>نصبه ولی مسیرش توی PATH نیست</strong> → مسیرش رو به PATH اضافه کن:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PATH</span><span class="s2">:/c/Program Files/PostgreSQL/18/bin"</span>
+$<span class="w"> </span>psql<span class="w"> </span>--version<span class="w">          </span><span class="c1"># ✅ حالا از هر جا کار می‌کند</span>
+</code></pre></div>
+
+<p>(دقت کن الگو: <code>PATH="$PATH:مسیرجدید"</code> — یعنی «PATH قبلی + یک پوشه جدید». اگه <code>$PATH:</code> رو جا بندازی، بقیه مسیرها از بین می‌رن و کل ترمینال دیوانه می‌شه! دائمی‌اش در <code>~/.bashrc</code>.)</p>
+<p>و راه ویندوز-خالص (برای همه برنامه‌ها حتی خارج از Git Bash): Start → «environment variables» → Edit the system environment variables → Environment Variables → ویرایش <code>Path</code> → New → مسیر. بعد ترمینال رو ببند و دوباره باز کن (ترمینال‌های باز PATH قدیمی رو دارن).</p>
+<h2>۹.۵ — فایل‌های .env: همون مفهوم، در مقیاس پروژه</h2>
+<p>چیزی که تو هر پروژه Next.js می‌بینی — <code>.env</code> — همون متغیر محیطیه، فقط <em>محلی برای یک پروژه</em>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># .env (پروژه my-shop)</span>
+<span class="nv">DATABASE_URL</span><span class="o">=</span><span class="s2">"postgresql://postgres:123@localhost:5432/shop"</span>
+<span class="nv">NEXT_PUBLIC_API_URL</span><span class="o">=</span><span class="s2">"https://api.myshop.dev"</span>
+</code></pre></div>
+
+<p>Next.js موقع اجرا اینها رو می‌خونه و توی <code>process.env.DATABASE_URL</code> می‌ذاره. چرا اینطور؟ چون:
+- هر پروژه تنظیمات خودش رو داره (لوکال ≠ پروداکشن)
+- <strong>رازها توی کد نمی‌ان</strong> — فایل <code>.env</code> باید حتماً در <code>.gitignore</code> قرار گیرد تا امنیت حفظ شود</p>
+<blockquote>
+<p>🔑 یک مفهوم، سه سطح: متغیر شل (نشست فعلی) → export در bashrc (همه نشست‌های تو) → فایل .env (محلی برای یک پروژه). دولوپر واقعی بین این سه سطح جابجا می‌شه.</p>
+</blockquote>
+<h2>۹.۶ — چند متغیر معروفی که هرجا می‌بینی</h2>
+<table>
+<thead>
+<tr>
+<th>متغیر</th>
+<th>چیه</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PATH</code></td>
+<td>لیست مسیرهای جستجوی دستورها</td>
+</tr>
+<tr>
+<td><code>HOME</code></td>
+<td>پوشه خانه کاربر</td>
+</tr>
+<tr>
+<td><code>USER</code></td>
+<td>اسم کاربر فعلی</td>
+</tr>
+<tr>
+<td><code>EDITOR</code></td>
+<td>ادیتور پیش‌فرض (git برای پیام کامیت ازش می‌پرسه)</td>
+</tr>
+<tr>
+<td><code>NODE_ENV</code> / <code>DATABASE_URL</code></td>
+<td>قراردادهای دنیای Node</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li>متغیر محیطی = تنظیماتی که به برنامه‌ها ارث می‌رسه؛ خواندن با <code>echo $NAME</code>، لیست با <code>env</code></li>
+<li>ساخت: <code>NAME="value"</code> (بدون فاصله!)؛ دائمی: <code>export</code> در <code>~/.bashrc</code> + <code>source</code></li>
+<li><strong>PATH = لیست جستجو.</strong> «command not found» = اسمش تو PATH نیست. علاج: <code>export PATH="$PATH:/مسیر/جدید"</code></li>
+<li>.env پروژه = همون مفهوم در مقیاس محلی، برای جداسازی تنظیمات و رازها از کد</li>
+</ul>
+<h2>📝 تمرین فصل ۹</h2>
+<ol>
+<li>سه متغیر <code>USER</code>، <code>HOME</code>، <code>SHELL</code> رو با echo چاپ کن.</li>
+<li>متغیر <code>GREETING="سلام مهندس"</code> بساز، echo بزن، ترمینال رو ببند و باز کن — پریده؟ چرا؟</li>
+<li>دائمی: یک متغیر <code>WORK="مسیر-زمین-تمرین"</code> رو در <code>~/.bashrc</code> export کن، source بزن و با <code>cd $WORK</code> مستقیم برو زمین تمرین.</li>
+<li><code>echo $PATH</code> رو بزن و سه تا از مسیرهاش رو بگو چی‌ان (به چی مربوطن؟).</li>
+<li>(کاربردی ⭐) اگه <code>psql</code> روی سیستمته ولی در ترمینال نیست، مسیر <code>C:\Program Files\PostgreSQL\18\bin</code> رو به PATH اضافه کن (همون الگوی فصل) و تستش کن.</li>
+</ol>
+<details open="open">
+<summary>جواب تمرین ۲ و ۳</summary>
+<div class="codehilite"><pre><span></span><code><span class="c1"># ۲: بله پریده — متغیرهای معمولی فقط در همان نشست زنده‌اند؛ باید export در bashrc شوند.</span>
+<span class="c1"># ۳:</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s1">'export WORK="/c/Users/developer/cli-playground"'</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="nb">source</span><span class="w"> </span>~/.bashrc
+<span class="nb">cd</span><span class="w"> </span><span class="nv">$WORK</span>
+</code></pre></div>
+
+<p>(ترفند <code>&gt;&gt;</code> برای اضافه‌کردن به فایل از فصل ۶ — بد نیست یکبار هم با nano دستی بنویسی!)</p>
+</details>
+<p>➡️ <strong>فصل بعد:</strong> پروسه‌ها — وقتی <code>npm run dev</code> رو می‌زنی دقیقاً چی اجرا می‌شه و چطوری نگهش داری/بکشی/بکشیش کنی.</p></section><section class="chapter" id="ch10"><h1>فصل ۱۰ — پروسه‌ها: اجرا، توقف، پس‌زمینه و آزاد کردن پورت ۳۰۰۰</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> هر دستوری که اجرا می‌کنی یک «پروسه» می‌سازه. یاد می‌گیری پروسه‌ها رو ببینی، در پس‌زمینه اجرا کنی، متوقف کنی — و معروف‌ترین کاربردش: وقتی Node روی پورت ۳۰۰۰ گیر کرده و نمی‌دونی چرا!</p>
+</blockquote>
+<hr />
+<h2>۱۰.۱ — پروسه چیه؟</h2>
+<p>هر برنامه در حال اجرا = یک <strong>پروسه (Process)</strong> با یک شناسه یکتا به اسم <strong>PID</strong>. <code>npm run dev</code> تو یک پروسه‌ست، همون ترمینال بازت هم یک پروسه‌ست. ببینشون:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>ps<span class="w">           </span><span class="c1"># پروسه‌های همین ترمینال</span>
+<span class="w">    </span>PID<span class="w"> </span>TTY<span class="w">          </span>TIME<span class="w"> </span>CMD
+<span class="w">   </span><span class="m">1234</span><span class="w"> </span>cons0<span class="w">    </span><span class="m">00</span>:00:01<span class="w"> </span>bash
+<span class="w">   </span><span class="m">5678</span><span class="w"> </span>cons0<span class="w">    </span><span class="m">00</span>:00:00<span class="w"> </span>ps
+
+$<span class="w"> </span>ps<span class="w"> </span>-ef<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-15<span class="w">      </span><span class="c1"># همه پروسه‌های سیستم (در Git Bash)</span>
+</code></pre></div>
+
+<p>ستون PID رو خوب یادت بمونه — کلید کنترل پروسه‌هاست.</p>
+<h2>۱۰.۲ — پیش‌زمینه، پس‌زمینه و سه کلید مهم</h2>
+<p>وقتی <code>npm run dev</code> می‌زنی، ترمینال «قفل» می‌شه چون برنامه داره جلوی چشمت اجرا می‌شه (foreground). کلیدهای کنترل:</p>
+<table>
+<thead>
+<tr>
+<th>کلید/دستور</th>
+<th>کار</th>
+<th>سناریو</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>توقف برنامه جلویی (SIGINT)</td>
+<td>سرور رو می‌بندی، اسکن طولانی رو لغو می‌کنی</td>
+</tr>
+<tr>
+<td><code>Ctrl+Z</code></td>
+<td>«نگه‌دار» — برنامه می‌ره خواب موقت</td>
+<td>«صبر کن وسط کارم یه چیزی بزنم»</td>
+</tr>
+<tr>
+<td><code>bg</code></td>
+<td>خواب رو بفرست به پس‌زمینه</td>
+<td>ادامه‌اش بده بدون دیدن خروجی</td>
+</tr>
+<tr>
+<td><code>fg</code></td>
+<td>برگردون به جلوی صفحه</td>
+<td>دوباره خروجی‌اش رو می‌خوام</td>
+</tr>
+<tr>
+<td><code>jobs</code></td>
+<td>لیست کارهای پس‌زمینه‌ی همین ترمینال</td>
+<td>«چی دارم تو پس‌زمینه؟»</td>
+</tr>
+</tbody>
+</table>
+<p>و میان‌برِ راحت: <code>&amp;</code> آخر دستور = مستقیم به پس‌زمینه:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>sleep<span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="p">&amp;</span><span class="w">             </span><span class="c1"># ۶۰ ثانیه بخواب — ولی منتظرت نمی‌مانم</span>
+<span class="o">[</span><span class="m">1</span><span class="o">]</span><span class="w"> </span><span class="m">4321</span><span class="w">                 </span><span class="c1"># شماره کار [1] و PID 4321</span>
+$<span class="w"> </span><span class="nb">jobs</span>
+<span class="o">[</span><span class="m">1</span><span class="o">]</span>+<span class="w">  </span>Running<span class="w">    </span>sleep<span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="p">&amp;</span>
+</code></pre></div>
+
+<blockquote>
+<p>💡 نکته ویندوزی: چون هر <code>npm run dev</code> در ترمینال خودش جلو می‌ره، دولوپرهای ویندوز معمولاً چند <em>تب</em> ترمینال باز می‌کنن (سرور/تست/دستورات). اونجا که ترمینال گرافیکی داری، <code>&amp;</code> کمتر لازم می‌شه — ولی مفهومش رو که بلد باشی روی سرور لینوکسی (SSH — فصل ۱۱) طلاست.</p>
+</blockquote>
+<h2>۱۰.۳ — kill: بستن پروسه با PID</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">kill</span><span class="w"> </span><span class="m">4321</span><span class="w">          </span><span class="c1"># درخواست تمیز: پروسه 4321 بسته شو</span>
+$<span class="w"> </span><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span><span class="m">4321</span><span class="w">       </span><span class="c1"># قتل! (SIGKILL — وقتی جواب نمی‌دهد) ⚠️</span>
+</code></pre></div>
+
+<ul>
+<li><code>kill</code> پیش‌فرض <em>درخواست</em> می‌فرسته (مثل window close) — برنامه می‌تونه تمیز جمع بشه</li>
+<li><code>-9</code> یعنی «سسیستم بهش بکشه» — آخرین راه، وقتی برنامه دیگه جواب نمی‌ده</li>
+</ul>
+<p>پیدا کردن PID چیزی که می‌خوای:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>ps<span class="w"> </span>-ef<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>node<span class="w">          </span><span class="c1"># همه پروسه‌های node</span>
+$<span class="w"> </span>tasklist<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>chrome<span class="w">   </span><span class="c1"># راه ویندوزی (tasklist = مدیر وظایف متنی)</span>
+</code></pre></div>
+
+<h2>۱۰.۴ — ⭐ سناریوی ستاره‌ی فصل: پورت ۳۰۰0 در اشغال است!</h2>
+<p>این ارور رو حتماً تا حالا دیدی یا خیلی زود می‌بینی:</p>
+<div class="codehilite"><pre><span></span><code>Error: listen EADDRINUSE: address already in use :::3000
+</code></pre></div>
+
+<p>یعنی یه پروسه‌ی قدیمی (معمولاً dev server قبلی که درست بسته نشد) هنوز روی پورت ۳۰۰۰ نشسته. راه‌حل قدم‌به‌قدم:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># ویندوز (در cmd یا PowerShell یا Git Bash):</span>
+$<span class="w"> </span>netstat<span class="w"> </span>-ano<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">":3000"</span>
+<span class="w">  </span>TCP<span class="w">    </span><span class="m">0</span>.0.0.0:3000<span class="w">    </span><span class="m">0</span>.0.0.0:0<span class="w">    </span>LISTENING<span class="w">    </span><span class="m">12345</span><span class="w">      </span>←<span class="w"> </span>PID<span class="w"> </span>پیدا<span class="w"> </span>شد!
+
+$<span class="w"> </span>taskkill<span class="w"> </span>//PID<span class="w"> </span><span class="m">12345</span><span class="w"> </span>//F
+SUCCESS:<span class="w"> </span>The<span class="w"> </span>process<span class="w"> </span>with<span class="w"> </span>PID<span class="w"> </span><span class="m">12345</span><span class="w"> </span>has<span class="w"> </span>been<span class="w"> </span>terminated.
+</code></pre></div>
+
+<blockquote>
+<p>⚠️ دقت: در <strong>Git Bash</strong> اسلش‌های فلگ دوتایی می‌شن (<code>//PID //F</code>) چون تک‌اسلش مسیر ویندوزی تفسیر می‌شه! در PowerShell/CMD عادی: <code>taskkill /PID 12345 /F</code>.</p>
+</blockquote>
+<div class="codehilite"><pre><span></span><code><span class="c1"># لینوکس/مک (و سرورها):</span>
+$<span class="w"> </span>lsof<span class="w"> </span>-i<span class="w"> </span>:3000<span class="w">        </span><span class="c1"># یا: ss -tlnp | grep 3000</span>
+$<span class="w"> </span><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;PID&gt;
+</code></pre></div>
+
+<p>این چرخه رو یکبار خودت انجام بدی، دیگه عمراً از این ارور نترسی. 😎</p>
+<h2>۱۰.۵ — نظارت زنده: چی داره منابع می‌خوره؟</h2>
+<table>
+<thead>
+<tr>
+<th>ابزار</th>
+<th>کجا</th>
+<th>کار</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>top</code></td>
+<td>لینوکس/مک/Git Bash</td>
+<td>مانیتور زنده متنی (q = خروج)</td>
+</tr>
+<tr>
+<td><code>htop</code></td>
+<td>لینوکس/مک (نصبی)</td>
+<td>نسخه قشنگ‌تر و قابل‌کار top</td>
+</tr>
+<tr>
+<td>Task Manager</td>
+<td>ویندوز (Ctrl+Shift+Esc)</td>
+<td>همون ولی گرافیکی</td>
+</tr>
+</tbody>
+</table>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>top
+<span class="c1"># کلیدهای مفید داخلش: P مرتب بر اساس CPU، M بر اساس رم، q خروج</span>
+</code></pre></div>
+
+<p>سناریوی واقعی: «فنم داره می‌ترکه!» → <code>top</code> → مرتب بر اساس CPU → مقصر رو <code>kill</code> کن.</p>
+<h2>۱۰.۶ — exit code: کد خروج هر دستور</h2>
+<p>هر پروسه موقع تموم شدن یک عدد می‌ذاره: <code>0</code> = موفق، غیرصفر = خطا. دیدنش:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>ls
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+<span class="m">0</span><span class="w">                       </span><span class="c1"># ls موفق بود</span>
+
+$<span class="w"> </span>ls<span class="w"> </span>/nejad
+ls:<span class="w"> </span>cannot<span class="w"> </span>access...<span class="w">    </span><span class="c1"># خطا</span>
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+<span class="m">2</span>
+</code></pre></div>
+
+<p>فعلاً فقط بدونش هست؛ در اسکریپت‌نویسی (فصل ۱۲) شرط‌هات بر اساس همین عددن — و پایپ‌لاین‌های اتوماسیون و CI/CD نیز دقیقاً با همین منطق تصمیم‌گیری می‌کنند: «سبز = exit code صفر».</p>
+<hr />
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li>هر برنامه در حال اجرا = پروسه با PID؛ دیدن با <code>ps -ef</code></li>
+<li><code>Ctrl+C</code> توقف جلویی، <code>&amp;</code> و <code>bg/fg/jobs</code> برای پس‌زمینه</li>
+<li><code>kill</code> درخواست تمیز؛ <code>kill -9</code> آخرین راه</li>
+<li><strong>EADDRINUSE</strong>: <code>netstat -ano | grep :3000</code> → <code>taskkill //PID n //F</code> (در Git Bash دوتایی!)</li>
+<li><code>top</code> برای نظارت؛ exit code صفر = موفق</li>
+</ul>
+<h2>📝 تمرین فصل ۱۰</h2>
+<ol>
+<li><code>sleep 100</code> بزن و با Ctrl+C وسطش لغوش کن.</li>
+<li><code>sleep 100 &amp;</code> بزن، با <code>jobs</code> ببینش، با <code>kill %1</code> (٪ یعنی شماره job نه PID!) بکشش، دوباره jobs بزن.</li>
+<li>خروجی <code>ps -ef | grep -i node</code> رو ببین — الان چند پروسه node داری؟ (اگه dev server روشنه حتماً می‌بینی‌ش!)</li>
+<li>چالش اصلی ⭐: عمداً یک dev server روشن کن (<code>npx serve .</code> یا <code>npm run dev</code> در یک پروژه)، از یک ترمینال دیگه با netstat پیداش کن، با taskkill ببندش — و ببین سرورِ ترمینال اول چه پیامی داد.</li>
+<li><code>echo $?</code> رو بعد از یک دستور موفق و یک دستور شکست‌خورده مقایسه کن.</li>
+</ol>
+<details open="open">
+<summary>جواب تمرین ۲</summary>
+<div class="codehilite"><pre><span></span><code>sleep<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="p">&amp;</span><span class="w">          </span><span class="c1"># [1] 4321</span>
+<span class="nb">jobs</span><span class="w">                 </span><span class="c1"># [1]+  Running  sleep 100 &amp;</span>
+<span class="nb">kill</span><span class="w"> </span>%1<span class="w">              </span><span class="c1"># %1 = job شماره ۱ (نه PID!)</span>
+<span class="nb">jobs</span><span class="w">                 </span><span class="c1"># [1]+  Terminated  sleep 100</span>
+</code></pre></div>
+
+</details>
+<p>➡️ <strong>فصل بعد:</strong> جعبه‌ابزار روزمره‌ی دولوپر — node/npm/npx، curl، ssh و بقیه دوستایی که هر روز می‌بینی.</p></section><section class="chapter" id="ch11"><h1>فصل ۱۱ — جعبه‌ابزار روزمره‌ی دولوپر: node/npm/npx، curl، ssh و دوستان</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> ابزارهایی که تو هر پروژه واقعی و هر شرکت می‌بینی و شاید تا حالا بدون آگاهی عمیق استفاده می‌کردی — حالا سازوکار و کاربرد دقیق هر کدوم رو یاد می‌گیری و مسلط می‌شی.</p>
+</blockquote>
+<hr />
+<h2>۱۱.۱ — node، npm، npx: سه‌قلوهای دنیای جاوااسکریپت</h2>
+<p>این سه ابزار پایه‌ی توسعه جاوااسکریپت و وب هستند؛ تفاوت‌های دقیق آنها:</p>
+<table>
+<thead>
+<tr>
+<th>ابزار</th>
+<th>چیه</th>
+<th>مثال</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>node</code></td>
+<td>موتور اجرای JS بیرون از مرورگر</td>
+<td><code>node script.js</code></td>
+</tr>
+<tr>
+<td><code>npm</code></td>
+<td>مدیر پکیج‌ها (نصب از npmjs.com)</td>
+<td><code>npm install axios</code></td>
+</tr>
+<tr>
+<td><code>npx</code></td>
+<td>«اجرا کن (اگه نبود اول بگیر)»</td>
+<td><code>npx create-next-app@latest</code></td>
+</tr>
+</tbody>
+</table>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>node<span class="w"> </span>-v<span class="w">                 </span><span class="c1"># نسخه موتور</span>
+v24.19.0
+
+$<span class="w"> </span>node<span class="w">                    </span><span class="c1"># REPL تعاملی — مثل کنسول مرورگر!</span>
+&gt;<span class="w"> </span><span class="m">2</span><span class="w"> </span>+<span class="w"> </span><span class="m">2</span>
+<span class="m">4</span>
+&gt;<span class="w"> </span>.exit<span class="w">                   </span><span class="c1"># خروج (یا Ctrl+C دو بار / Ctrl+D)</span>
+
+$<span class="w"> </span>npm<span class="w"> </span>-v<span class="w">                  </span><span class="c1"># نسخه npm</span>
+<span class="m">11</span>.19.0
+</code></pre></div>
+
+<p>نکته‌ی npx که خیلی‌ها نمی‌دونن: اون <code>@latest</code> آخر اسم یعنی «آخرین نسخه رو بگیر اجرا کن» — و npx اول چک می‌کنه تو <code>node_modules</code> پروژه‌ات داریش یا نه. برای همینه که <code>npx create-next-app</code> بدون نصب دائمی کار می‌کنه.</p>
+<p>فلگ‌های npm که باید بشناسی:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>npm<span class="w"> </span>install<span class="w">             </span><span class="c1"># نصب طبق package.json (خلاصه: npm i)</span>
+$<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>dev<span class="w">             </span><span class="c1"># اجرای اسکریپت dev از package.json</span>
+$<span class="w"> </span>npm<span class="w"> </span><span class="nb">test</span><span class="w">                </span><span class="c1"># میان‌بر run test</span>
+$<span class="w"> </span>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>pnpm<span class="w">     </span><span class="c1"># -g = نصب سراسری (global) — روی سیستم، نه فقط پروژه</span>
+</code></pre></div>
+
+<blockquote>
+<p>⚠️ <code>-g</code> رو کم و محتاط استفاده کن — هر چیزی که global نصب می‌شه، نسخه‌ی «سیستمی» می‌شه و بین پروژه‌ها ممکنه تداخل بده. <code>npx</code> اغلب جایگزین بهتریه چون دائم تازه نگهش می‌داره.</p>
+</blockquote>
+<h2>۱۱.۲ — curl: پستچی اینترنت</h2>
+<p>curl = یک HTTP request از ترمینال. وقتی API می‌سازی و می‌خوای بدون مرورگر/Postman چکش کنی:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>https://api.github.com/zen
+Keep<span class="w"> </span>it<span class="w"> </span>logically<span class="w"> </span>awesome.<span class="w">          </span><span class="c1"># خروجی: متن ساده</span>
+
+$<span class="w"> </span>curl<span class="w"> </span>-i<span class="w"> </span>https://api.github.com/zen<span class="w">    </span><span class="c1"># با هدرها (-i = include)</span>
+$<span class="w"> </span>curl<span class="w"> </span>-o<span class="w"> </span>page.html<span class="w"> </span>https://example.com<span class="w"> </span><span class="c1"># ذخیره در فایل (-o = output)</span>
+</code></pre></div>
+
+<p>و فرم ارسال داده (که در مستندات هر API دنیا می‌بینی):</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://api.example.com/users<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer MY_TOKEN"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="s1">'{"name": "ali"}'</span>
+<span class="c1"># -X متد، -H هدر، -d بدنه داده</span>
+</code></pre></div>
+
+<p>چرا بهتر از مرورگر برای دیباگ API؟ چون <em>دقیقاً</em> می‌بینی چی می‌فرستی و چی میاد — بدون کش و کوکی و جادوی مرورگر.</p>
+<h2>۱۱.۳ — ssh و scp: کنترل از راه دور</h2>
+<p>پروتکل SSH کلید ورود امن به دنیای شبکه است: <strong>ورود به هر سرور لینوکسی دنیا با ترمینال خودت.</strong></p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>ssh<span class="w"> </span>user@203.0.113.10
+<span class="c1"># مثل اینکه کیبوردت به یک سرور وصل شده — همه دستورهای این دوره اونجا هم کار می‌کنند!</span>
+
+$<span class="w"> </span><span class="nb">exit</span><span class="w">                        </span><span class="c1"># برگشت</span>
+</code></pre></div>
+
+<p>دو ابزار مکمل:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>scp<span class="w"> </span>file.zip<span class="w"> </span>user@203.0.113.10:/home/user/<span class="w">     </span><span class="c1"># کپی فایل به سرور (cp روی شبکه!)</span>
+$<span class="w"> </span>ssh<span class="w"> </span>user@host<span class="w"> </span><span class="s2">"uptime"</span><span class="w">                         </span><span class="c1"># یک دستور، بدون ورود کامل</span>
+</code></pre></div>
+
+<p>وقتی روزی به سرور production وصل شی (با ssh)، همه‌ی این دوره یعنی: <code>cd</code>، <code>tail -f</code> لاگ، <code>ps</code> و <code>top</code>، <code>grep</code> در لاگ‌ها، <code>nano</code> تنظیمات. برای همینه که می‌گم CLI = زبان مشترک سرورها.</p>
+<h2>۱۱.۴ — آرشیو: tar و zip</h2>
+<p>پکیج‌های لینوکسی و بکاپ‌ها معمولاً <code>.tar.gz</code> ان:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>tar<span class="w"> </span>-czf<span class="w"> </span>backup.tar.gz<span class="w"> </span>my-folder/<span class="w">     </span><span class="c1"># فشرده‌سازی: c=ساخت, z=فشرده gzip, f=اسم فایل</span>
+$<span class="w"> </span>tar<span class="w"> </span>-tzf<span class="w"> </span>backup.tar.gz<span class="w">                </span><span class="c1"># محتواش را لیست کن (بدون باز کردن)</span>
+$<span class="w"> </span>tar<span class="w"> </span>-xzf<span class="w"> </span>backup.tar.gz<span class="w">                </span><span class="c1"># باز کردن: x=extract</span>
+</code></pre></div>
+
+<p>قانون حفظی محبوب: <strong>«c برای ساختن، x برای بیرون آوردن»</strong> — فقط این دو تا یادت باشه، بقیه از --help میاد.</p>
+<h2>۱۱.۵ — wget و download (مکمل curl)</h2>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>wget<span class="w"> </span>https://example.com/file.zip<span class="w">     </span><span class="c1"># دانلود مستقیم فایل</span>
+$<span class="w"> </span>curl<span class="w"> </span>-O<span class="w"> </span>https://example.com/file.zip<span class="w">  </span><span class="c1"># معادل با curl (-O = ذخیره با اسم اصلی)</span>
+</code></pre></div>
+
+<h2>۱۱.۶ — جدول جمع‌بندی: ابزارهای پرکاربرد اکوسیستم دولوپری</h2>
+<table>
+<thead>
+<tr>
+<th>ابزار</th>
+<th>کارایی اصلی</th>
+<th>زمینه کاربرد</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>node</code> / <code>npm</code> / <code>npx</code></td>
+<td>اجرای رانتایم / مدیریت پکیج / اجرای موقت ابزارها</td>
+<td>پروژه‌های جاوااسکریپت و فول‌استک</td>
+</tr>
+<tr>
+<td><code>git</code> / <code>gh</code></td>
+<td>کنترل نسخه کد / تعامل با مخازن از ترمینال</td>
+<td>مدیریت سورس کد و ریپازیتوری</td>
+</tr>
+<tr>
+<td><code>psql</code></td>
+<td>کلاینت خط فرمان دیتابیس</td>
+<td>مدیریت پایگاه داده و اجرای کوئری</td>
+</tr>
+<tr>
+<td><code>ssh-keygen</code> / <code>ssh</code></td>
+<td>ساخت کلیدهای امنیتی / اتصال امن از راه دور</td>
+<td>اتصال به سرورها و احراز هویت</td>
+</tr>
+<tr>
+<td><code>curl</code></td>
+<td>ارسال درخواست‌های HTTP و دریافت پاسخ</td>
+<td>تست API و ارتباطات شبکه</td>
+</tr>
+<tr>
+<td><code>npx serve</code> / <code>npm run dev</code></td>
+<td>راه‌اندازی وب‌سرور لوکال</td>
+<td>محیط توسعه فرانت‌اند و بک‌اند</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li><code>node</code> موتور، <code>npm</code> فروشگاه، <code>npx</code> اجرای لحظه‌ای (<code>@latest</code> = تازه‌ترین)</li>
+<li><code>curl</code> پستچی HTTP: <code>-i</code> هدرها، <code>-X POST -H -d</code> ارسال داده — دیباگ API بدون مرورگر</li>
+<li><code>ssh</code> = ورود به هر سرور دنیا؛ همه‌ی این دوره روی سرور هم کار می‌کند؛ <code>scp</code> کپی روی شبکه</li>
+<li><code>tar -czf</code> بساز / <code>-xzf</code> باز کن</li>
+<li>اکوسیستم دولوپری یک زبان مشترک داره: همینه که یاد گرفتی</li>
+</ul>
+<h2>📝 تمرین فصل ۱۱</h2>
+<ol>
+<li>با <code>node</code> یک REPL باز کن، چند محاسبه کن و با <code>.exit</code> بیا.</li>
+<li><code>npm -v</code> و <code>npx -v</code> و <code>node -v</code> رو مقایسه کن (چرا npm و npx معمولاً هم‌نسخه‌ان؟).</li>
+<li>با curl از <code>https://api.github.com/zen</code> یک جمله‌ی حکیمانه بگیر — چند بار بزن، جمله‌ها عوض می‌شن!</li>
+<li>curl با <code>-i</code> بزن به یک سایت و هدرهای پاسخ رو بخون (<code>content-type</code> چیه؟).</li>
+<li>یک پوشه رو tar کن، محتواش رو با <code>-tzf</code> ببین، حذفش کن، با <code>-xzf</code> برگردون — چرخه کامل آرشیو.</li>
+</ol>
+<details open="open">
+<summary>جواب تمرین ۲ و ۵</summary>
+<div class="codehilite"><pre><span></span><code><span class="c1"># ۲: چون npm و npx هر دو همراه node خودشان نصب می‌شوند (part of npm package).</span>
+<span class="c1"># ۵:</span>
+tar<span class="w"> </span>-czf<span class="w"> </span>demo.tar.gz<span class="w"> </span>cli-playground/<span class="w">     </span><span class="c1"># ساخت</span>
+tar<span class="w"> </span>-tzf<span class="w"> </span>demo.tar.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5<span class="w">           </span><span class="c1"># لیست</span>
+rm<span class="w"> </span>-r<span class="w"> </span>cli-playground<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>tar<span class="w"> </span>-xzf<span class="w"> </span>demo.tar.gz<span class="w">   </span><span class="c1"># بازیابی!</span>
+</code></pre></div>
+
+</details>
+<p>➡️ <strong>فصل بعد:</strong> اسکریپت‌نویسی — همه‌ی این دستورات را به «دکمه‌های شخصی خودت» تبدیل کن.</p></section><section class="chapter" id="ch12"><h1>فصل ۱۲ — اسکریپت‌نویسی Bash: خودکارسازی کارهای تکراری</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> فصل ۸ اولین اسکریپتت رو ساخت؛ حالا یاد می‌گیری برنامه‌نویسی واقعی کنه: متغیر، آرگومان، شرط، حلقه. آخر فصل یک اسکریپت کاربردی کامل داری که هر روزه استفاده‌ش می‌کنی.</p>
+</blockquote>
+<hr />
+<h2>۱۲.۱ — متغیر و آرگومان‌ها</h2>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nv">NAME</span><span class="o">=</span><span class="s2">"مهندس"</span><span class="w">                        </span><span class="c1"># تعریف: بدون فاصله دور =</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"سلام </span><span class="nv">$NAME</span><span class="s2">"</span><span class="w">                   </span><span class="c1"># استفاده: $ قبل از اسم</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"اسم اسکریپت: </span><span class="nv">$0</span><span class="s2">"</span><span class="w">              </span><span class="c1"># متغیرهای خاص:</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"آرگومان اول: </span><span class="nv">$1</span><span class="s2">"</span><span class="w">              </span><span class="c1">#   $1 $2 $3 ... آرگومان‌های ورودی</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"تعداد آرگومان‌ها: </span><span class="nv">$#</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"همه آرگومان‌ها: </span><span class="nv">$@</span><span class="s2">"</span>
+</code></pre></div>
+
+<p>اجرا:</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>./myscript.sh<span class="w"> </span>ali<span class="w"> </span>reza
+سلام<span class="w"> </span>مهندس
+اسم<span class="w"> </span>اسکریپت:<span class="w"> </span>./myscript.sh
+آرگومان<span class="w"> </span>اول:<span class="w"> </span>ali
+تعداد<span class="w"> </span>آرگومان‌ها:<span class="w"> </span><span class="m">2</span>
+همه<span class="w"> </span>آرگومان‌ها:<span class="w"> </span>ali<span class="w"> </span>reza
+</code></pre></div>
+
+<p>و قرارداد دوست‌داشتنی: مقدار پیش‌فرض با <code>${VAR:-پیش‌فرض}</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">TARGET</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="nv">project</span><span class="si">}</span><span class="s2">"</span><span class="w">     </span><span class="c1"># اگر $1 داده نشده بود، "project"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"هدف: </span><span class="nv">$TARGET</span><span class="s2">"</span>
+</code></pre></div>
+
+<blockquote>
+<p>⚠️ قانون طلایی: در echo ها و جابجایی‌ها متغیرها رو توی <strong>کوتیشن دوتایی</strong> بذار (<code>"$FILE"</code>) — تا اسم‌های دارای فاصله یا خالی‌ها اسکریپت رو نشکنن.</p>
+</blockquote>
+<h2>۱۲.۲ — ورودی کاربر: read</h2>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">read</span><span class="w"> </span>-p<span class="w"> </span><span class="s2">"اسم پروژه‌ات چیه؟ "</span><span class="w"> </span>PROJECT
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"در حال ساخت </span><span class="nv">$PROJECT</span><span class="s2">..."</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$PROJECT</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"✅ ساخته شد!"</span>
+</code></pre></div>
+
+<p><code>-p</code> یعنی «قبل از خوندن، این پیام رو نشون بده». مثل <code>prompt()</code> جاوااسکریپت، ولی برای شل.</p>
+<h2>۱۲.۳ — شرط‌ها: if</h2>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nv">FILE</span><span class="o">=</span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="nv">$FILE</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$FILE</span><span class="s2"> یک فایل معمولی است — </span><span class="si">${#}</span><span class="s2"> :</span><span class="k">$(</span>wc<span class="w"> </span>-l<span class="w"> </span>&lt;<span class="w"> </span><span class="s2">"</span><span class="nv">$FILE</span><span class="s2">"</span><span class="k">)</span><span class="s2"> خط"</span>
+<span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">"</span><span class="nv">$FILE</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$FILE</span><span class="s2"> یک پوشه است"</span>
+<span class="k">else</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$FILE</span><span class="s2"> وجود ندارد!"</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="w">                       </span><span class="c1"># کد خروج غیرصفر = شکست (بررسی‌شده در فصل ۱۰)</span>
+<span class="k">fi</span>
+</code></pre></div>
+
+<p>عملگرهای تست رایج:</p>
+<table>
+<thead>
+<tr>
+<th>تست</th>
+<th>معنی</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-f x</code> / <code>-d x</code></td>
+<td>فایل هست؟ / پوشه هست؟</td>
+</tr>
+<tr>
+<td><code>-z "$s"</code> / <code>-n "$s"</code></td>
+<td>خالی است؟ / غیرخالی است؟</td>
+</tr>
+<tr>
+<td><code>"$a" = "$b"</code></td>
+<td>برابرند؟</td>
+</tr>
+<tr>
+<td><code>$n -eq 0</code> / <code>-gt 5</code> / <code>-lt 3</code></td>
+<td>برابر / بزرگ‌تر / کوچک‌تر (اعدادی)</td>
+</tr>
+</tbody>
+</table>
+<p>⚠️ جزئیات نحوی که همه گیرش می‌افتن: اطراف <code>[ ]</code> <strong>فاصله اجباریه</strong> (<code>[ -f "$f" ]</code> نه <code>[-f "$f"]</code>)، و <code>then</code> و <code>fi</code> (برعکسِ if) یادت نره.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># یک‌خطی هم می‌شود (&amp;&amp; = اگر موفق بود بعدی، || = اگر شکست خورد بعدی):</span>
+<span class="o">[</span><span class="w"> </span>-d<span class="w"> </span>node_modules<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"نصب شده"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span>npm<span class="w"> </span>install
+</code></pre></div>
+
+<h2>۱۲.۴ — حلقه‌ها: for</h2>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="c1"># برای هر فایل md یک خروجی txt بساز</span>
+<span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>docs/*.md<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"پردازش: </span><span class="nv">$f</span><span class="s2">"</span>
+<span class="w">  </span>cp<span class="w"> </span><span class="s2">"</span><span class="nv">$f</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">f</span><span class="p">%.md</span><span class="si">}</span><span class="s2">.txt"</span><span class="w">        </span><span class="c1"># ${f%.md} = اسم بدون پسوند .md</span>
+<span class="k">done</span>
+
+<span class="c1"># روی لیست ثابت:</span>
+<span class="k">for</span><span class="w"> </span>name<span class="w"> </span><span class="k">in</span><span class="w"> </span>ali<span class="w"> </span>sara<span class="w"> </span>reza<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"سلام </span><span class="nv">$name</span><span class="s2">"</span>
+<span class="k">done</span>
+
+<span class="c1"># شمارشی:</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"خط </span><span class="nv">$i</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</code></pre></div>
+
+<p>ترکیب with find (فصل ۷): همه فایل‌های tmp رو پیدا و حذف کن — ولی امن:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.tmp"</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"حذف </span><span class="nv">$f</span><span class="s2">"</span>
+<span class="w">  </span>rm<span class="w"> </span><span class="s2">"</span><span class="nv">$f</span><span class="s2">"</span>
+<span class="k">done</span>
+</code></pre></div>
+
+<h2>۱۲.۵ — توابع و کامل‌ترین اسکریپت دوره: <code>newproj.sh</code> ⭐</h2>
+<p>بذار همه‌چیز رو جمع کنی — اسکریپت ساخت پروژه‌ی جدید:</p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="c1"># newproj.sh — ساخت اسکلت پروژه با یک دستور</span>
+<span class="c1"># استفاده: ./newproj.sh &lt;اسم&gt; [تایپ]</span>
+
+<span class="nv">NAME</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="si">}</span><span class="s2">"</span>
+<span class="nv">TYPE</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">2</span><span class="k">:-</span><span class="nv">basic</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="nv">$NAME</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"❌ استفاده: ./newproj.sh &lt;اسم پروژه&gt; [basic|web]"</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+create_basic<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$NAME</span><span class="s2">/src"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$NAME</span><span class="s2">/docs"</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"# </span><span class="nv">$NAME</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$NAME</span><span class="s2">/README.md"</span>
+<span class="o">}</span>
+
+create_web<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$NAME</span><span class="s2">/src/components"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$NAME</span><span class="s2">/public"</span>
+<span class="w">  </span>cat<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$NAME</span><span class="s2">/README.md"</span><span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s"># $NAME</span>
+<span class="s">پروژه وب ساخته‌شده با newproj.sh</span>
+<span class="s">EOF</span>
+<span class="o">}</span>
+
+<span class="k">case</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TYPE</span><span class="s2">"</span><span class="w"> </span><span class="k">in</span>
+<span class="w">  </span>web<span class="o">)</span><span class="w">   </span>create_web<span class="w"> </span><span class="p">;;</span>
+<span class="w">  </span>basic<span class="o">)</span><span class="w"> </span>create_basic<span class="w"> </span><span class="p">;;</span>
+<span class="w">  </span>*<span class="o">)</span><span class="w">     </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"❌ تایپ ناشناخته: </span><span class="nv">$TYPE</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">;;</span>
+<span class="k">esac</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"✅ پروژه </span><span class="nv">$NAME</span><span class="s2"> (</span><span class="nv">$TYPE</span><span class="s2">) ساخته شد در: </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/</span><span class="nv">$NAME</span><span class="s2">"</span>
+</code></pre></div>
+
+<p>سه چیز جدید که اینجا دیدی:</p>
+<table>
+<thead>
+<tr>
+<th>ساختار</th>
+<th>کار</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat &gt; file &lt;&lt;EOF ... EOF</code></td>
+<td>heredoc — نوشتن چندخطی در فایل</td>
+</tr>
+<tr>
+<td><code>case ... esac</code></td>
+<td>سوئیچ کیس شل (ساختار دسته‌بندی ورودی‌ها)</td>
+</tr>
+<tr>
+<td>توابع با <code>name() { }</code></td>
+<td>مثل توابع JS — با صدازدن اسمش</td>
+</tr>
+</tbody>
+</table>
+<h2>۱۲.۶ — اسکریپت‌ها رو «دستور» کن</h2>
+<p>الگوی حرفه‌ای (ادامه‌ی فصل ۸): پوشه <code>~/bin</code> بساز، اسکریپت‌های کاربردی‌ات رو اونجا بذار، <code>chmod +x</code> بزن و مسیرش رو به PATH اضافه کن (فصل ۹):</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/bin
+$<span class="w"> </span>nano<span class="w"> </span>~/bin/newproj.sh<span class="w">        </span><span class="c1"># (محتوای بالا)</span>
+$<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>~/bin/newproj.sh
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">'export PATH="$PATH:/c/Users/developer/bin"'</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/.bashrc
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>newproj.sh<span class="w"> </span>test-shop<span class="w"> </span>web<span class="w">    </span><span class="c1"># از هر جا! مثل یک دستور رسمی سیستم 🎉</span>
+</code></pre></div>
+
+<p>حالا اسکریپت‌های شخصی تو، هم‌ردیف <code>git</code> و <code>npm</code> نشستن.</p>
+<h2>✅ جمع‌بندی فصل</h2>
+<ul>
+<li>متغیر بدون فاصله دور <code>=</code>؛ آرگومان‌ها <code>$1 $2...</code>؛ پیش‌فرض <code>${1:-پیش‌فرض}</code></li>
+<li>کوتیشن دوتایی دور متغیرها = ضد ترکیدن اسکریپت</li>
+<li><code>if [ -f x ]; then ... fi</code> — فاصله‌های <code>[ ]</code> اجباری؛ <code>&amp;&amp;</code> / <code>||</code> برای یک‌خطی‌ها</li>
+<li><code>for</code> روی wildcard ها و لیست‌ها؛ <code>read -p</code> برای ورودی کاربر</li>
+<li>heredoc برای متن چندخطی؛ <code>case/esac</code> برای دسته‌بندی؛ توابع برای تمیزی</li>
+<li>مسیر حرفه‌ای: اسکریپت‌های کاربردی در <code>~/bin</code> + PATH → «دستورهای شخصی»</li>
+</ul>
+<h2>📝 تمرین فصل ۱۲</h2>
+<ol>
+<li>اسکریپت <code>greet.sh</code> بنویس که اسم رو از آرگومان بگیره (بدون آرگومان: «همه» سلام کنه) — از <code>${1:-همه}</code> استفاده کن.</li>
+<li><code>check.sh &lt;مسیر&gt;</code> بنویس: اگه پوشه بود «پوشه‌ست»، فایل بود «فایله، X خط»، نبود «وجود نداره» با exit 1.</li>
+<li>حلقه‌ای بنویس که همه فایل‌های <code>.txt</code> زمین تمرین رو بشماره و «نام‌فایل: تعداد-کلمه» چاپ کنه (راهنمایی: <code>wc -w &lt; "$f"</code> داخل حلقه).</li>
+<li><code>newproj.sh</code> رو کامل بساز، به <code>~/bin</code> بده و دو پروژه باهاش بساز (basic و web) — و <code>ls</code> روی هر دو بزن.</li>
+<li>چالش ⭐: اسکریپت <code>cleanup.sh</code> بنویس که: از پوشه‌ی داده‌شده بکاپ بگیره (tar)، فایل‌های <code>.tmp</code> رو حذف کنه و آخرش گزارش بده. (ترکیب فصل‌های ۴، ۷، ۱۱!)</li>
+</ol>
+<details open="open">
+<summary>جواب تمرین ۵</summary>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nv">DIR</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="p">.</span><span class="si">}</span><span class="s2">"</span>
+tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>basename<span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">"</span><span class="k">)</span><span class="s2">-backup.tar.gz"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">"</span>
+find<span class="w"> </span><span class="s2">"</span><span class="nv">$DIR</span><span class="s2">"</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.tmp"</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-print<span class="w"> </span>-delete
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"✅ بکاپ گرفته شد و tmp ها پاک شدند."</span>
+</code></pre></div>
+
+<p>(تستش رو اول روی یک پوشه‌ی تمرینی بزن، نه پروژه‌ی واقعی!)</p>
+</details>
+<p>➡️ <strong>فصل آخر:</strong> چیت‌شیت کامل + گلاساری + نقشه‌ی ادامه‌ی راه.</p></section><section class="chapter" id="ch13"><h1>فصل ۱۳ — چیت‌شیت، گلاساری و راه ادامه</h1>
+<blockquote>
+<p>🎯 <strong>هدف:</strong> مرجع مرور سریع دوره — روی دیوار، کنار کیبورد. چاپش کن.</p>
+</blockquote>
+<hr />
+<h2>۱۳.۱ — چیت‌شیت دستورات (به ترتیب اهمیت روزمره)</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># ═══ ناوبری (فصل ۳) ═══</span>
+<span class="nb">pwd</span><span class="w">                          </span><span class="c1"># کجام؟</span>
+ls<span class="w"> </span>-lah<span class="w">                      </span><span class="c1"># لیست کامل خوانا</span>
+<span class="nb">cd</span><span class="w"> </span>&lt;مسیر&gt;<span class="w"> </span>/<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..<span class="w"> </span>/<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>-<span class="w">   </span><span class="c1"># برو / بالا / خانه / برگشت</span>
+code<span class="w"> </span>.<span class="w">                       </span><span class="c1"># پوشه فعلی در VS Code</span>
+
+<span class="c1"># ═══ فایل‌ها (فصل ۴) ═══</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>a/b/c<span class="w">               </span><span class="c1"># پوشه تو در تو</span>
+touch<span class="w"> </span>f.txt<span class="w">                  </span><span class="c1"># فایل خالی</span>
+cp<span class="w"> </span>-r<span class="w"> </span>a<span class="w"> </span>b<span class="w"> </span>/<span class="w"> </span>mv<span class="w"> </span>a<span class="w"> </span>b<span class="w">           </span><span class="c1"># کپی / جابجایی+نام</span>
+rm<span class="w"> </span>f<span class="w"> </span>/<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span>dir/<span class="w">            </span><span class="c1"># حذف (⚠️ اول ls با همون مسیر!)</span>
+cat<span class="w"> </span>f<span class="w"> </span>/<span class="w"> </span>less<span class="w"> </span>f<span class="w"> </span>/<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>log<span class="w"> </span><span class="c1"># خواندن / پیمایش / دنبال زنده</span>
+
+<span class="c1"># ═══ راهنما (فصل ۵) ═══</span>
+ابزار<span class="w"> </span>--help<span class="w">                 </span><span class="c1"># اولین کار همیشه!</span>
+which<span class="w"> </span>node<span class="w">                   </span><span class="c1"># از کجا اجرا می‌شود؟</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ll</span><span class="o">=</span><span class="s1">'ls -lah'</span><span class="w">           </span><span class="c1"># در ~/.bashrc + source</span>
+
+<span class="c1"># ═══ جریان (فصل ۶) ═══</span>
+cmd<span class="w"> </span>&gt;<span class="w"> </span>f<span class="w">  </span>/<span class="w">  </span>cmd<span class="w"> </span>&gt;&gt;<span class="w"> </span>f<span class="w">         </span><span class="c1"># ذخیره بازنویسی / افزودن</span>
+cmd1<span class="w"> </span><span class="p">|</span><span class="w"> </span>cmd2<span class="w">                  </span><span class="c1"># خروجی ← ورودی</span>
+cmd<span class="w"> </span>&gt;<span class="w"> </span>all.log<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w">           </span><span class="c1"># خطاها هم ذخیره</span>
+&gt;<span class="w"> </span>big.log<span class="w">                    </span><span class="c1"># خالی کردن فایل</span>
+
+<span class="c1"># ═══ جستجو (فصل ۷) ═══</span>
+grep<span class="w"> </span>-in<span class="w"> </span><span class="s2">"کلمه"</span><span class="w"> </span>فایل/پوشه<span class="w">    </span><span class="c1"># -r بازگشتی، -n شماره خط، -c شمارش</span>
+find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.js"</span><span class="w">          </span><span class="c1"># (کوتیشن!) قبل از -delete بدون delete بزن</span>
+du<span class="w"> </span>-sh<span class="w"> </span>*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w">          </span><span class="c1"># پرحجم‌ترین‌ها</span>
+
+<span class="c1"># ═══ دسترسی و اسکریپت (فصل ۸) ═══</span>
+chmod<span class="w"> </span>+x<span class="w"> </span>script.sh<span class="w">           </span><span class="c1"># اجرا-پذیر کن</span>
+./script.sh<span class="w">                  </span><span class="c1"># اجرا (~/bin + PATH = از هر جا)</span>
+
+<span class="c1"># ═══ متغیرها (فصل ۹) ═══</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$VAR</span><span class="w">  </span>/<span class="w">  </span>env<span class="w">            </span><span class="c1"># خواندن / لیست</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">VAR</span><span class="o">=</span><span class="s2">"x"</span><span class="w">               </span><span class="c1"># ساخت محیطی (در ~/.bashrc دائمی)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PATH</span><span class="s2">:/مسیر"</span><span class="w">    </span><span class="c1"># افزودن مسیر جستجو</span>
+
+<span class="c1"># ═══ پروسه‌ها (فصل ۱۰) ═══</span>
+ps<span class="w"> </span>-ef<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>node<span class="w">           </span><span class="c1"># پروسه‌ها</span>
+Ctrl+C<span class="w">  </span>/<span class="w">  </span>Ctrl+Z<span class="w"> </span>+<span class="w"> </span>bg/fg<span class="w">    </span><span class="c1"># توقف / پس‌زمینه</span>
+cmd<span class="w"> </span><span class="p">&amp;</span><span class="w">                        </span><span class="c1"># اجرا در پس‌زمینه</span>
+<span class="nb">kill</span><span class="w"> </span>PID<span class="w"> </span>/<span class="w"> </span><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>PID<span class="w">       </span><span class="c1"># بستن / قتل</span>
+netstat<span class="w"> </span>-ano<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>:3000<span class="w">    </span><span class="c1"># چه کسی پورت را گرفته؟</span>
+taskkill<span class="w"> </span>//PID<span class="w"> </span>n<span class="w"> </span>//F<span class="w">         </span><span class="c1"># (Git Bash!) / در cmd: /PID /F</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span><span class="w">                      </span><span class="c1"># کد خروج دستور قبل (0=موفق)</span>
+
+<span class="c1"># ═══ ابزارها (فصل ۱۱) ═══</span>
+node<span class="w"> </span>/<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>dev<span class="w"> </span>/<span class="w"> </span>npx<span class="w"> </span>pkg<span class="w"> </span><span class="c1"># اجرا / اسکریپت / یک‌بارمصرف</span>
+curl<span class="w"> </span><span class="o">[</span>-i<span class="o">]</span><span class="w"> </span><span class="o">[</span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span>-d<span class="o">]</span><span class="w">    </span><span class="c1"># HTTP دستی</span>
+ssh<span class="w"> </span>user@host<span class="w">  </span>/<span class="w">  </span>scp<span class="w"> </span>f<span class="w"> </span>h:p<span class="w">  </span><span class="c1"># ورود ریموت / کپی ریموت</span>
+tar<span class="w"> </span>-czf<span class="w"> </span>a.tar.gz<span class="w"> </span>dir/<span class="w">  </span>/<span class="w">  </span>tar<span class="w"> </span>-xzf<span class="w"> </span>a.tar.gz
+
+<span class="c1"># ═══ اسکریپت (فصل ۱۲) ═══</span>
+<span class="c1">#!/usr/bin/env bash          # خط اول همیشه</span>
+<span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="w"> </span>/<span class="w"> </span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="nv">پیش</span><span class="p">‌فرض</span><span class="si">}</span><span class="w">          </span><span class="c1"># آرگومان / با پیش‌فرض</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="nv">$x</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>...<span class="w"> </span><span class="k">fi</span><span class="w">  </span><span class="c1"># فاصله‌های [ ] اجباری!</span>
+<span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>*.txt<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>...<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</code></pre></div>
+
+<h2>۱۳.۲ — کلیدهای مقدس</h2>
+<table>
+<thead>
+<tr>
+<th>کلید</th>
+<th>کار</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Tab</code> / <code>Tab Tab</code></td>
+<td>کامل‌سازی / لیست گزینه‌ها</td>
+</tr>
+<tr>
+<td><code>↑</code> <code>↓</code></td>
+<td>تاریخچه</td>
+</tr>
+<tr>
+<td><code>Ctrl+R</code></td>
+<td>جستجوی تاریخچه</td>
+</tr>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>لغو / فرار</td>
+</tr>
+<tr>
+<td><code>Ctrl+L</code></td>
+<td>پاک کردن صفحه</td>
+</tr>
+<tr>
+<td><code>Ctrl+A</code> / <code>Ctrl+E</code></td>
+<td>اول / آخر خط</td>
+</tr>
+<tr>
+<td><code>Ctrl+U</code></td>
+<td>پاک کردن تا اول خط</td>
+</tr>
+</tbody>
+</table>
+<h2>۱۳.۳ — گلاساری فارسی–انگلیسی</h2>
+<table>
+<thead>
+<tr>
+<th>انگلیسی</th>
+<th>فارسی</th>
+<th>یک جمله</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Terminal</td>
+<td>ترمینال</td>
+<td>پنجره‌ای که شل داخلش اجرا می‌شود</td>
+</tr>
+<tr>
+<td>Shell (Bash)</td>
+<td>شل</td>
+<td>مترجم دستورات متنی</td>
+</tr>
+<tr>
+<td>Working Directory</td>
+<td>پوشه کاری</td>
+<td>جایی که دستورات نسبت به آن اجرا می‌شوند</td>
+</tr>
+<tr>
+<td>Absolute/Relative Path</td>
+<td>مسیر مطلق/نسبی</td>
+<td>از ریشه / از جای فعلی</td>
+</tr>
+<tr>
+<td>Flag / Option</td>
+<td>فلگ/گزینه</td>
+<td>تنظیم رفتار دستور (<code>-r</code>, <code>--all</code>)</td>
+</tr>
+<tr>
+<td>Argument</td>
+<td>آرگومان</td>
+<td>موضوع دستور (اسم فایل و...)</td>
+</tr>
+<tr>
+<td>Wildcard / Glob</td>
+<td>الگوی عام</td>
+<td><code>*.log</code> و <code>?</code> برای کار گروهی</td>
+</tr>
+<tr>
+<td>Pipe</td>
+<td>لوله <code>|</code></td>
+<td>اتصال خروجی به ورودی</td>
+</tr>
+<tr>
+<td>stdin/stdout/stderr</td>
+<td>ورودی/خروجی/خطا</td>
+<td>سه جریان هر برنامه (0/1/2)</td>
+</tr>
+<tr>
+<td>Redirection</td>
+<td>بازهدانی</td>
+<td><code>&gt;</code> و <code>&gt;&gt;</code> و <code>&lt;</code></td>
+</tr>
+<tr>
+<td>Environment Variable</td>
+<td>متغیر محیطی</td>
+<td>تنظیماتی که به برنامه‌ها ارث می‌رسد</td>
+</tr>
+<tr>
+<td>PATH</td>
+<td>—</td>
+<td>لیست مسیرهای جستجوی دستورها</td>
+</tr>
+<tr>
+<td>Process / PID</td>
+<td>پروسه / شناسه پروسه</td>
+<td>برنامه در حال اجرا و شماره‌اش</td>
+</tr>
+<tr>
+<td>Exit Code</td>
+<td>کد خروج</td>
+<td>۰ = موفق، غیرصفر = خطا</td>
+</tr>
+<tr>
+<td>Permission / chmod</td>
+<td>دسترسی / تغییر دسترسی</td>
+<td>rwx برای صاحب/گروه/دیگران</td>
+</tr>
+<tr>
+<td>sudo</td>
+<td>—</td>
+<td>اجرا با هویت ادمین</td>
+</tr>
+<tr>
+<td>Shebang</td>
+<td>—</td>
+<td><code>#!...</code> خط اول اسکریپت: با چی اجرا شوم</td>
+</tr>
+<tr>
+<td>Script</td>
+<td>اسکریپت</td>
+<td>فایل متنیِ قابل‌اجرای دستورات</td>
+</tr>
+<tr>
+<td>Alias</td>
+<td>نام مستعار</td>
+<td>میان‌بر شخصی برای دستور بلند</td>
+</tr>
+<tr>
+<td>REPL</td>
+<td>محیط تعاملی</td>
+<td>مثل <code>node</code> خالی — بنویس و فوری جواب بگیر</td>
+</tr>
+</tbody>
+</table>
+<h2>۱۳.۴ — ده ارور کلاسیک و ترجمه‌شان</h2>
+<table>
+<thead>
+<tr>
+<th>ارور</th>
+<th>یعنی چی</th>
+<th>علاج</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command not found</code></td>
+<td>در PATH نبود</td>
+<td>نصب؟ مسیر به PATH؟ (<code>which</code>)</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>مسیر اشتباه</td>
+<td><code>pwd</code> و <code>ls</code> — کجام؟ چی اونجاست؟</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>اجازه نداری</td>
+<td><code>chmod</code> یا <code>sudo</code> (فقط واقعاً لازم)</td>
+</tr>
+<tr>
+<td><code>Is a directory</code></td>
+<td>فایل می‌خواستی، پوشه دادی</td>
+<td>مسیر رو کامل کن</td>
+</tr>
+<tr>
+<td>اسکریپت اجرا نمی‌شه با <code>.</code></td>
+<td><code>./script.sh</code> بزن</td>
+<td>نقطه‌اسلش = «همین‌جا»</td>
+</tr>
+<tr>
+<td><code>EADDRINUSE :3000</code></td>
+<td>پورت اشغاله</td>
+<td>netstat → taskkill (فصل ۱۰!)</td>
+</tr>
+<tr>
+<td><code>rm: cannot remove...</code></td>
+<td>دسترسی یا -r لازم</td>
+<td><code>rm -r</code>؛ محافظت‌شده؟ sudo</td>
+</tr>
+<tr>
+<td>فلگ جواب نداد</td>
+<td>شاید جای اشتباهی است</td>
+<td><code>--help</code> — ترتیب فلگ‌ها مهمه</td>
+</tr>
+<tr>
+<td>خروجی لاگ خالی بود</td>
+<td>خطاها در stderr بود</td>
+<td><code>2&gt;&amp;1</code> (فصل ۶)</td>
+</tr>
+<tr>
+<td>متن فارسی به‌هم‌ریخته در ترمینال</td>
+<td>فونت/یونیکد</td>
+<td>Windows Terminal یا فونت مناسب</td>
+</tr>
+</tbody>
+</table>
+<h2>۱۳.۵ — نقشه راه پس از این دوره</h2>
+<div class="mermaid">
+flowchart LR
+    A["الان: CLI از صفر ✅"] --> B["عادت: هر کار فایلی را اول با ترمینال بزن"]
+    B --> C["اسکریپت‌های شخصی در ~/bin"]
+    C --> D["PowerShell (برای محیط ویندوز-محور)"]
+    D --> E["SSH واقعی: مدیریت یک VPS شخصی"]
+    E --> F["ابزارهای مدرن: zsh + oh-my-zsh, fzf, tmux"]
+    style A fill:#0ea5e9,color:#fff
+    style F fill:#22c55e,color:#fff
+</div>
+
+<p><strong>توصیه‌های پایانی:</strong></p>
+<ol>
+<li><strong>قانون ۳۰ روزه:</strong> یک ماه هر عملیات فایلی رو اول از ترمینال بزن (کپی، ساخت، جستجو). بعد از ۳۰ روز دست‌هات خودشون می‌رن سمت ترمینال — مثل رانندگی.</li>
+<li><strong>هر چیز تکراری → اسکریپت.</strong> دفعه سومی که یک کار رو دستی کردی، اسکریپتشو بنویس (فصل ۱۲). کلید‌های میان‌بر شخصی‌ات = مزیت واقعی تو در تیم.</li>
+<li><strong>داکیومنت رسمی دوستت:</strong> <code>man bash</code> و <a href="https://www.gnu.org/software/bash/">gnu.org/software/bash</a> مرجع کامل Bash؛ و برای Windows Terminal: <code>learn.microsoft.com</code>. این دوره روش فکر کردن رو داد؛ جزئیات بی‌انتها اونجاست.</li>
+</ol>
+<p><strong>مسیر رشد مهندسی:</strong> تسلط بر لینوکس و خط فرمان (CLI) پایه و اساس دنیای DevOps، مدیریت سرور، Docker، کانتینرسازی و پایپ‌لاین‌های CI/CD است. با تمرین و استفاده روزمره از مفاهیم این دوره، گام بلندی در حرفه‌ای‌تر شدن برداشته‌اید. 🚀</p>
+<p>موفق باشید — ترمینال اکنون ابزار قدرتمند شماست!</p></section>
+<script src="mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad:true, theme:'base',
+  themeVariables: { fontFamily:'Vazirmatn, Tahoma', fontSize:'13px',
+    primaryColor:'#ecfeff', primaryBorderColor:'#0e7490', primaryTextColor:'#0f172a',
+    lineColor:'#64748b', secondaryColor:'#f5f3ff', tertiaryColor:'#f8fafc' },
+  flowchart: { htmlLabels:true, curve:'basis' } });</script>
+</body></html>
